@@ -90,14 +90,11 @@ pub fn run() {
     // Kullanıcı kendi değerini set ettiyse ona saygı göster.
     #[cfg(target_os = "linux")]
     {
-        if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
-            std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
-        }
-        if std::env::var_os("WEBKIT_DISABLE_COMPOSITING_MODE").is_none() {
-            std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
-        }
-        // KDE Wayland'da frameless pencere suruklemesi (startDragging) kararsiz;
-        // XWayland uzerinden calistirmak guvenilir oluyor.
+        // NVIDIA + Wayland'da WebKit GBM buffer olusturamiyordu (bos pencere).
+        // GDK_BACKEND=x11 ile XWayland uzerinden calistirinca donanim ivmeli
+        // render sorunsuz oluyor; WebKit bayraklari kapatilmistir cunku
+        // yazilim render (WEBKIT_DISABLE_COMPOSITING_MODE) akiciligi oldurur.
+        // Kullanici kendi degerini set ettiyse ona saygi goster.
         if std::env::var_os("GDK_BACKEND").is_none() {
             std::env::set_var("GDK_BACKEND", "x11");
         }

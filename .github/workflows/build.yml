@@ -11,9 +11,10 @@ jobs:
   build:
     permissions:
       contents: write
+    # Bir platform basarisiz olsa bile digerlerinin paketleri publish edilsin.
+    continue-on-error: true
     strategy:
       fail-fast: false
-      max-parallel: 2
       matrix:
         include:
           - platform: ubuntu-22.04
