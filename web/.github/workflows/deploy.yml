@@ -1,0 +1,24 @@
+name: deploy
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/florence-web
+            git pull --ff-only
+            npm ci
+            npm run build
+            rm -rf /usr/share/nginx/html/*
+            cp -r dist/* /usr/share/nginx/html/
