@@ -96,6 +96,11 @@ pub fn run() {
         if std::env::var_os("WEBKIT_DISABLE_COMPOSITING_MODE").is_none() {
             std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
         }
+        // KDE Wayland'da frameless pencere suruklemesi (startDragging) kararsiz;
+        // XWayland uzerinden calistirmak guvenilir oluyor.
+        if std::env::var_os("GDK_BACKEND").is_none() {
+            std::env::set_var("GDK_BACKEND", "x11");
+        }
     }
 
     tauri::Builder::default()
