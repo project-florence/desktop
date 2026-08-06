@@ -2,6 +2,8 @@ import { Menu, X } from 'lucide-react'
 import { useNavStore } from '@/stores/navStore'
 import { usePageTitleStore } from '@/stores/pageTitleStore'
 import { AnnouncementBell } from './AnnouncementBell'
+import { isTauri } from '@/lib/desktop'
+import { cn } from '@/lib/utils'
 
 export function Navbar() {
   const mobileSidebarOpen = useNavStore((s) => s.mobileSidebarOpen)
@@ -9,7 +11,10 @@ export function Navbar() {
   const title = usePageTitleStore((s) => s.title)
 
   return (
-    <header className="sticky top-0 z-30 h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-between px-4 md:px-6">
+    <header className={cn(
+      'sticky z-30 h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-between px-4 md:px-6',
+      isTauri() ? 'top-9' : 'top-0',
+    )}>
       <div className="flex items-center gap-2 min-w-0">
         <button
           type="button"

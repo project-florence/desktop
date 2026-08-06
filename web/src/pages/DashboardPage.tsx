@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Settings2 } from 'lucide-react'
+import { Settings2, PackageOpen } from 'lucide-react'
 import { DashboardGrid } from '@/components/shared/DashboardGrid'
 import { CustomizationPanel } from '@/components/shared/CustomizationPanel'
 import { usePreferences } from '@/hooks/usePreferences'
@@ -89,7 +90,13 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end gap-2">
+        <Link to="/downloads">
+          <Button variant="outline" size="sm">
+            <PackageOpen className="h-4 w-4 mr-1" />
+            {t('downloads.pageTitle')}
+          </Button>
+        </Link>
         {!editing && (
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
             <Settings2 className="h-4 w-4 mr-1" />

@@ -497,5 +497,14 @@
   "chart": {
     "loading": "Loading...",
     "noData": "No data available for this period"
+  },
+  "downloads": {
+    "pageTitle": "Downloads",
+    "title": "Desktop App",
+    "platformWindows": "Windows",
+    "platformMacos": "macOS",
+    "platformLinux": "Linux",
+    "empty": "No releases available yet.",
+    "note": "Windows: .exe or .msi, macOS: .dmg, Linux: .AppImage / .deb / .rpm."
   }
 }

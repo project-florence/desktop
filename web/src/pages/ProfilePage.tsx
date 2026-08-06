@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { LogOut, User, Key, Download, Trash2, ArrowLeft, Settings, Palette, Globe, Megaphone, Plus, Pencil, Trash } from 'lucide-react'
+import { LogOut, User, Key, Download, Trash2, ArrowLeft, Settings, Palette, Globe, Megaphone, Plus, Pencil, Trash, PackageOpen } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
@@ -22,6 +22,7 @@ import api from '@/lib/api'
 import { cn } from '@/lib/utils'
 import type { Profile, Announcement } from '@/types/api'
 import { CreditDisplay } from '@/components/shared/CreditDisplay'
+import { DownloadsContent } from '@/components/shared/DownloadsContent'
 
 export default function ProfilePage() {
   const { t, i18n } = useTranslation()
@@ -180,6 +181,10 @@ export default function ProfilePage() {
           <TabsTrigger value="settings" className="flex-1">
             <Settings className="h-4 w-4 mr-2" />
             {t('profile.settings')}
+          </TabsTrigger>
+          <TabsTrigger value="downloads" className="flex-1">
+            <PackageOpen className="h-4 w-4 mr-2" />
+            {t('downloads.pageTitle')}
           </TabsTrigger>
           {profile?.user_type === 'admin' && (
             <TabsTrigger value="admin" className="flex-1">
@@ -429,6 +434,10 @@ export default function ProfilePage() {
               </Select>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="downloads" className="mt-4">
+          <DownloadsContent />
         </TabsContent>
         {profile?.user_type === 'admin' && (
           <TabsContent value="admin" className="mt-4 space-y-4">
