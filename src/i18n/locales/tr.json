@@ -497,5 +497,14 @@
   "chart": {
     "loading": "Yükleniyor...",
     "noData": "Bu periyot için veri bulunamadı"
+  },
+  "downloads": {
+    "pageTitle": "İndir",
+    "title": "Masaüstü Uygulaması",
+    "platformWindows": "Windows",
+    "platformMacos": "macOS",
+    "platformLinux": "Linux",
+    "empty": "İndirilebilir sürümler henüz yayınlanmadı.",
+    "note": "Windows için .exe veya .msi, macOS için .dmg, Linux için .AppImage / .deb / .rpm seçebilirsiniz."
   }
 }
