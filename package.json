@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "tauri": "tauri",
-    "postinstall": "npm --prefix web install",
+    "setup:web": "npm --prefix web install",
     "sync:web": "git subtree pull --prefix web web main --squash",
     "dev": "tauri dev",
     "build": "cross-env NO_STRIP=1 tauri build"
