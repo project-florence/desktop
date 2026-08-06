@@ -64,9 +64,47 @@ jobs:
           args: ${{ matrix.args }}
 
       - name: Upload build artifacts
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         uses: actions/upload-artifact@v4
         with:
           name: florence-${{ matrix.platform }}-bundle
           path: src-tauri/target/release/bundle/**/*
           if-no-files-found: warn
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: staging
+          merge-multiple: true
+
+      - name: Generate manifest
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          python3 -c "
+          import json, os
+          files = sorted(os.listdir('staging'))
+          with open('staging/manifest.json', 'w') as f:
+              json.dump({'version': '$VERSION', 'files': files}, f, indent=2)
+          print('files:', files)
+          "
+
+      - name: Create downloads directory
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: mkdir -p /usr/share/nginx/html/downloads
+
+      - name: Upload binaries to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: "staging/*"
+          target: "/usr/share/nginx/html/downloads"
+          strip_components: 1
