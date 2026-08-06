@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Minus, Square, Copy, X } from 'lucide-react'
 import { isTauri } from '@/lib/desktop'
-import { cn } from '@/lib/utils'
 
 export function TitleBar() {
   const [maximized, setMaximized] = useState(false)
@@ -36,13 +35,11 @@ export function TitleBar() {
   }
 
   return (
-    <div
-      data-tauri-drag-region
-      className={cn(
-        'fixed inset-x-0 top-0 z-[70] flex items-center justify-between border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/60 select-none h-9',
-      )}
-    >
-      <div data-tauri-drag-region className="flex items-center gap-2 px-3 min-w-0">
+    <div className="fixed inset-x-0 top-0 z-[70] flex items-center justify-between border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/60 select-none h-9">
+      <div
+        data-tauri-drag-region
+        className="flex items-center gap-2 px-3 h-full min-w-0"
+      >
         <span
           data-tauri-drag-region
           className="text-xs font-semibold tracking-wide text-muted-foreground truncate"
@@ -50,7 +47,8 @@ export function TitleBar() {
           Florence
         </span>
       </div>
-      <div data-tauri-drag-region className="flex items-center h-full">
+      <div data-tauri-drag-region className="flex-1 h-full" />
+      <div className="flex items-center h-full">
         <button
           type="button"
           onClick={() => winAction('minimize')}
