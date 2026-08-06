@@ -90,11 +90,15 @@ pub fn run() {
     // Kullanıcı kendi değerini set ettiyse ona saygı göster.
     #[cfg(target_os = "linux")]
     {
-        // NVIDIA + Wayland'da WebKit GBM buffer olusturamiyordu (bos pencere).
-        // GDK_BACKEND=x11 ile XWayland uzerinden calistirinca donanim ivmeli
-        // render sorunsuz oluyor; WebKit bayraklari kapatilmistir cunku
-        // yazilim render (WEBKIT_DISABLE_COMPOSITING_MODE) akiciligi oldurur.
-        // Kullanici kendi degerini set ettiyse ona saygi goster.
+        // NVIDIA suruculeri WebKit'in DMABUF renderer'inda GBM buffer
+        // olusturamiyor (bos pencere). DMABUF kapatilir; boylece WebKit
+        // DMABUF'suz GPU kompozisyon yoluna duser ve akici kalir.
+        // WEBKIT_DISABLE_COMPOSITING_MODE BILEREK AYARLANMAZ - yazilim
+        // render kaydirma akiciligini oldurur. Kullanici override ederse
+        // onun degeri korunur.
+        if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
+            std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+        }
         if std::env::var_os("GDK_BACKEND").is_none() {
             std::env::set_var("GDK_BACKEND", "x11");
         }
