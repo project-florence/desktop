@@ -85,22 +85,26 @@ fn setup_tray<R: Runtime>(app: &mut tauri::App<R>) -> tauri::Result<()> {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    // WebKitGTK, NVIDIA sürücüleriyle Wayland'da DMABUF/GBM buffer oluşturamıyor;
-    // pencere boş geliyor ya da açılmıyor. Yazılım render'a düşmek güvenilir çalışır.
-    // Kullanıcı kendi değerini set ettiyse ona saygı göster.
+    // WebKitGTK, NVIDIA suruculeriyle Wayland'da DMABUF/GBM buffer olusturamiyor;
+    // pencere bos geliyor ya da acilmiyor (AcceleratedSurfaceDMABuf hatalari,
+    // Gdk Error 71 Protocol error). Arastirma sonucu dogru recete:
+    //   - WEBKIT_DISABLE_DMABUF_RENDERER=1  -> beyaz ekran/crash'i cozer,
+    //     GPU compositing korunur (akici kalir).
+    //   - __NV_DISABLE_EXPLICIT_SYNC=1      -> Wayland Error 71 crash'ini
+    //     PERFORMANS KAYBI OLMADAN cozer (NVIDIA 560+ + EGLStreams). AMD/Intel
+    //     sistemlerde no-op'dur.
+    //   - GDK_BACKEND x11'e ZORLANMAZ        -> uygulama native Wayland'da calisir
+    //     (XWayland maliyeti ve quirk cakismalari olmaz).
+    //   - WEBKIT_DISABLE_COMPOSITING_MODE BILEREK AYARLANMAZ -> yazilim render'a
+    //     duser, kaydirma akiciligini oldurur (20-30 FPS). Kullanici override
+    //     ederse kendi degeri korunur.
     #[cfg(target_os = "linux")]
     {
-        // NVIDIA suruculeri WebKit'in DMABUF renderer'inda GBM buffer
-        // olusturamiyor (bos pencere). DMABUF kapatilir; boylece WebKit
-        // DMABUF'suz GPU kompozisyon yoluna duser ve akici kalir.
-        // WEBKIT_DISABLE_COMPOSITING_MODE BILEREK AYARLANMAZ - yazilim
-        // render kaydirma akiciligini oldurur. Kullanici override ederse
-        // onun degeri korunur.
         if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
             std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
         }
-        if std::env::var_os("GDK_BACKEND").is_none() {
-            std::env::set_var("GDK_BACKEND", "x11");
+        if std::env::var_os("__NV_DISABLE_EXPLICIT_SYNC").is_none() {
+            std::env::set_var("__NV_DISABLE_EXPLICIT_SYNC", "1");
         }
     }
 
