@@ -3,8 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { Layout } from '@/components/shared/Layout'
-import { ProtectedRoute } from '@/components/shared/ProtectedRoute'
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 import { useMaintenanceStore } from '@/stores/maintenanceStore'
 import { usePageTracking } from '@/hooks/usePageTracking'
@@ -16,6 +14,8 @@ import { useThemeStore } from '@/stores/themeStore'
 import { themes } from '@/config/themes'
 
 const LandingPage = lazy(() => import('@/pages/LandingPage'))
+const Layout = lazy(() => import('@/components/shared/Layout').then((m) => ({ default: m.Layout })))
+const ProtectedRoute = lazy(() => import('@/components/shared/ProtectedRoute').then((m) => ({ default: m.ProtectedRoute })))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))

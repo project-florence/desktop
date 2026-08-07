@@ -10,7 +10,6 @@ import { cn } from '@/lib/utils'
 import api from '@/lib/api'
 import { isTauri, desktopNotify } from '@/lib/desktop'
 import type { Announcement } from '@/types/api'
-import { announcementsResponseSchema, parseApi } from '@/lib/apiSchemas'
 
 export function AnnouncementBell() {
   const { t } = useTranslation()
@@ -22,7 +21,9 @@ export function AnnouncementBell() {
     queryKey: ['announcements'],
     queryFn: async () => {
       const res = await api.get('/api/v1/announcements')
-       return parseApi(announcementsResponseSchema, res.data).announcements as Announcement[]
+      // apiSchemas (zod) yalnizca veri geldiginde yuklenir — ilk yukleme grafiginden cikar.
+      const { announcementsResponseSchema, parseApi } = await import('@/lib/apiSchemas')
+      return parseApi(announcementsResponseSchema, res.data).announcements as Announcement[]
     },
     refetchInterval: 60_000,
   })
