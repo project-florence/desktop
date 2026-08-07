@@ -17,7 +17,10 @@ jobs:
           script: |
             set -e
             cd /opt/florence-web
-            git pull --ff-only
+            # Deploy mirror'i: yerel degisiklikler (npm'in lockfile dokunmasi vb.)
+            # pull'u asla bloklamasin.
+            git fetch origin
+            git reset --hard origin/main
             npm ci
             npm run build
             rm -rf /usr/share/nginx/html/*

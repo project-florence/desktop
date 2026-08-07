@@ -1,0 +1,71 @@
+name: sync-desktop
+
+# Web'de v* tag atildiginda (yani yeni web surumu yayinlandiginda):
+#   1. web subtree'sini desktop'a otomatik senkronlar (desktop her zaman guncel web ile build edilir)
+#   2. desktop versiyonunu web tag'iyle esitler
+#   3. ayni tag'i desktop'a da atar -> desktop build.yml tag'de tetiklenir
+#      -> Windows/Linux/macOS binary'leri otomatik draft release olarak yayinlanir
+#
+# Boylece tek aksiyon: web'de tag atmak. Web deploy + desktop sync + desktop build hepsi otomatik.
+# Manuel tetikleme: tag input'u doldurulursa o tag senkronlanir; bos birakilirsa sadece subtree sync yapilir.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Senkronlanacak tag (bos: sadece subtree sync, tag atilmaz)'
+        required: false
+        default: ''
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Sync web subtree into desktop
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DESKTOP_SYNC_TOKEN: ${{ secrets.DESKTOP_SYNC_TOKEN }}
+          TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+        run: |
+          set -e
+          git clone https://github.com/project-florence/desktop.git /tmp/desktop
+          cd /tmp/desktop
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Push auth: web repo'sunun GITHUB_TOKEN'i desktop'a yazamaz,
+          # bu yuzden kullanici token'i secret olarak kullanilir (repo scope).
+          git remote set-url origin "https://x-access-token:${DESKTOP_SYNC_TOKEN}@github.com/project-florence/desktop.git"
+
+          git remote add web https://github.com/project-florence/web.git
+          git fetch web main
+
+          # Subtree'yi web main'e senkronla
+          git subtree pull --prefix web web main --squash \
+            --message "chore: sync web subtree (${TAG:-main})"
+
+          # Desktop versiyonunu web tag'iyle esitle (release isimleri tutarli olsun)
+          if [ -n "${TAG}" ] && [ "${TAG}" != "main" ]; then
+            VER="${TAG#v}"
+            sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"${VER}\"/" package.json src-tauri/tauri.conf.json
+            git add package.json src-tauri/tauri.conf.json
+            git commit -m "chore: bump version to ${VER}" || true
+            git push origin main
+          fi
+
+          git push origin main
+
+          # Ayni tag'i desktop'a da at (zaten varsa atlama) -> desktop build + release
+          if [ -n "${TAG}" ] && [ "${TAG}" != "main" ] && ! git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
+            git tag -a "${TAG}" -m "chore: web ${TAG} senkronu"
+            git push origin "${TAG}"
+            echo "Desktop tag ${TAG} atildi -> binary build otomatik tetiklendi"
+          elif [ -n "${TAG}" ] && [ "${TAG}" != "main" ]; then
+            echo "Desktop tag ${TAG} zaten var, atlaniyor"
+          else
+            echo "Tag belirtilmedi, sadece subtree sync yapildi"
+          fi
