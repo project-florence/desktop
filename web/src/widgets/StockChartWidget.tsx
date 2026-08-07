@@ -1,12 +1,14 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, lazy, Suspense } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { StockChart } from '@/components/shared/StockChart'
 import { processPriceData } from '@/lib/price'
 import api from '@/lib/api'
 import type { PriceHistory } from '@/types/api'
+
+// klinecharts agir (~226 kB); sadece widget gercekten render edilince yuklenir.
+const StockChart = lazy(() => import('@/components/shared/StockChart').then((m) => ({ default: m.StockChart })))
 
 const PERIODS = [
   { label: '1g', value: '1d' },
@@ -106,7 +108,9 @@ export default function StockChartWidget({ config }: { config?: Record<string, u
         {isLoading ? (
           <Skeleton className="h-full w-full" />
         ) : data && data.length > 0 ? (
-          <StockChart data={processed.data} loading={false} visibleRange={{ from: processed.from, to: processed.to }} />
+          <Suspense fallback={<Skeleton className="h-[300px] w-full" />}>
+            <StockChart data={processed.data} loading={false} visibleRange={{ from: processed.from, to: processed.to }} />
+          </Suspense>
         ) : (
           <p className="text-xs text-muted-textforeground">No data</p>
         )}
