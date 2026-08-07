@@ -39,6 +39,18 @@ const PLATFORMS: PlatformDef[] = [
   },
 ]
 
+/** Uzun build dosya adini kisa, okunabilir bir etikete cevirir. */
+function fileLabel(file: string): string {
+  if (file.endsWith('-setup.exe') || file.endsWith('.exe')) return 'Windows (.exe)'
+  if (file.endsWith('.msi')) return 'Windows (.msi)'
+  if (file.endsWith('.dmg')) return file.includes('aarch64') ? 'macOS (Apple Silicon)' : 'macOS (Intel)'
+  if (file.endsWith('.tar.gz')) return 'macOS (arşiv)'
+  if (file.endsWith('.deb')) return 'Linux (Debian/Ubuntu)'
+  if (file.endsWith('.rpm')) return 'Linux (RPM)'
+  if (file.endsWith('.AppImage')) return 'Linux (AppImage)'
+  return file
+}
+
 export function DownloadsContent() {
   const { t } = useTranslation()
 
@@ -87,7 +99,7 @@ export function DownloadsContent() {
         <h2 className="text-xl font-bold">{t('downloads.title')}</h2>
         <span className="text-sm text-muted-foreground">v{data.version}</span>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {grouped.map(({ platform, files }) => {
           const Icon = platform.icon
           return (
@@ -103,12 +115,18 @@ export function DownloadsContent() {
                   <a
                     key={file}
                     href={`/downloads/${file}`}
+                    title={file}
                     className={cn(
                       buttonVariants({ variant: 'outline' }),
-                      'w-full justify-between group/btn',
+                      'w-full justify-between gap-2 group/btn',
                     )}
                   >
-                    <span className="text-xs font-mono truncate">{file}</span>
+                    <span className="flex min-w-0 flex-col items-start leading-tight">
+                      <span className="text-xs font-medium">{fileLabel(file)}</span>
+                      <span className="w-full max-w-full truncate text-[10px] font-mono text-muted-foreground">
+                        {file}
+                      </span>
+                    </span>
                     <Download className="h-4 w-4 shrink-0" />
                   </a>
                 ))}
