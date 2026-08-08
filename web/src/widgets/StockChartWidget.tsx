@@ -109,7 +109,7 @@ export default function StockChartWidget({ config }: { config?: Record<string, u
           <Skeleton className="h-full w-full" />
         ) : data && data.length > 0 ? (
           <Suspense fallback={<Skeleton className="h-[300px] w-full" />}>
-            <StockChart data={processed.data} loading={false} visibleRange={{ from: processed.from, to: processed.to }} />
+            <StockChart data={processed.data} loading={false} visibleRange={{ from: processed.from, to: processed.to }} height="100%" className="min-h-[240px]" />
           </Suspense>
         ) : (
           <p className="text-xs text-muted-textforeground">No data</p>

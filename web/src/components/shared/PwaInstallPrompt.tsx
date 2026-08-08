@@ -68,7 +68,7 @@ export function PwaInstallPrompt() {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto flex max-w-md items-center justify-between gap-3 rounded-xl border border-primary/30 bg-card/95 p-3 shadow-xl backdrop-blur">
+    <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 right-4 z-50 mx-auto flex max-w-md items-center justify-between gap-3 rounded-xl border border-primary/30 bg-card/95 p-3 shadow-xl backdrop-blur">
       <div className="min-w-0">
         <p className="text-sm font-medium">Florence’i yükle</p>
         <p className="text-xs text-muted-foreground">Daha hızlı erişim için ana ekrana ekle.</p>

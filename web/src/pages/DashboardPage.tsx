@@ -98,7 +98,7 @@ export default function DashboardPage() {
           </Button>
         </Link>
         {!editing && (
-          <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+          <Button variant="outline" size="sm" className="hidden md:inline-flex" onClick={() => setEditing(true)}>
             <Settings2 className="h-4 w-4 mr-1" />
             {t('customization.edit')}
           </Button>
@@ -111,7 +111,7 @@ export default function DashboardPage() {
       </div>
 
       {editing ? (
-        <div className="flex gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1 min-w-0">
             <DashboardGrid
               layout={workingLayout}

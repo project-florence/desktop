@@ -39,7 +39,7 @@ export function CustomizationPanel({ onAddWidget, onSave, onReset, isSaving }: C
   }
 
   return (
-    <div className="w-72 shrink-0 border-l border-border bg-card/50 backdrop-blur-sm p-4 space-y-4 overflow-y-auto max-h-[calc(100vh-8rem)]">
+    <div className="w-full lg:w-72 lg:shrink-0 border-t lg:border-t-0 lg:border-l border-border bg-card/50 backdrop-blur-sm p-4 space-y-4 overflow-y-auto max-h-none lg:max-h-[calc(100dvh-8rem)]">
       <div>
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
           {t('customization.widgets')}

@@ -11,6 +11,9 @@ interface StockChartProps {
   data: PriceHistory[]
   loading?: boolean
   visibleRange?: { from: number; to: number }
+  /** Grafik yuksekligi. Sayfada 400 (varsayilan); dashboard widget'inda "100%" ile esnek. */
+  height?: number | string
+  className?: string
 }
 
 function toKLineData(d: PriceHistory): KLineData {
@@ -88,7 +91,7 @@ function buildStyles(charts: typeof themes.florence.charts): DeepPartial<Styles>
   }
 }
 
-export function StockChart({ data, loading, visibleRange }: StockChartProps) {
+export function StockChart({ data, loading = false, visibleRange, height = 400, className }: StockChartProps) {
   const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<ReturnType<typeof init> | null>(null)
@@ -116,9 +119,17 @@ export function StockChart({ data, loading, visibleRange }: StockChartProps) {
 
     const handleResize = () => { chart.resize() }
     window.addEventListener('resize', handleResize)
+    // RGL widget ekleme/silme ve breakpoint gecislerinde container genisligi
+    // degisir; window resize yakalamaz -> ResizeObserver ile takip et.
+    let resizeObserver: ResizeObserver | null = null
+    if (typeof ResizeObserver !== 'undefined' && containerRef.current) {
+      resizeObserver = new ResizeObserver(() => chart.resize())
+      resizeObserver.observe(containerRef.current)
+    }
 
     return () => {
       window.removeEventListener('resize', handleResize)
+      resizeObserver?.disconnect()
       dispose(chart)
       chartRef.current = null
     }
@@ -176,7 +187,7 @@ export function StockChart({ data, loading, visibleRange }: StockChartProps) {
   const neverHadData = !hasDataRef.current
 
   return (
-    <div className="relative" style={{ height: 400 }}>
+    <div className={`relative ${className ?? ''}`} style={{ height }}>
       <div ref={containerRef} className="w-full h-full rounded-lg" />
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/60 backdrop-blur-[1px]">

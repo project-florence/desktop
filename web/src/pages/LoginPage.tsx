@@ -102,7 +102,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-background p-4 overflow-hidden">
+    <div className="relative min-h-dvh flex items-center justify-center bg-background p-4 overflow-hidden">
       <HyperspaceBackground
         hyperdriveTriggered={hyperdriveTriggered}
         onHyperdriveComplete={handleHyperdriveComplete}

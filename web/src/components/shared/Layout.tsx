@@ -23,7 +23,7 @@ export function Layout() {
   }, [preferences, applyStoredTheme])
 
   return (
-    <div className={cn('flex min-h-screen relative', isTauri() && 'pt-9')}>
+    <div className={cn('flex min-h-dvh relative', isTauri() && 'pt-9')}>
       <div className="fixed inset-0 bg-gradient-to-br from-background via-background to-primary/[0.03] -z-10" />
       <TitleBar />
       <Sidebar />
