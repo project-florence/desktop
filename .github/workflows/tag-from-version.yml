@@ -1,0 +1,41 @@
+name: tag-from-version
+
+# Versiyon text'i tek kaynak: package.json'daki version degisince
+# (main'e push), v${version} tag'i otomatik atilir (varsa atlanir).
+# Tag atilinca: deploy + sync-desktop (desktop subtree + build) otomatik tetiklenir.
+#
+# Kullanim: package.json'da version 0.3.0 yap -> push -> tag + tum zincir otomatik.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag from version text
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          VER=$(node -p "require('./package.json').version")
+          TAG="v${VER}"
+          echo "version text: ${VER} -> tag: ${TAG}"
+          # git push icin token'li origin (git, GH_TOKEN'i otomatik kullanmaz)
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/project-florence/web.git"
+          # annotated tag icin git kimligi gerekir
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
+            echo "Tag ${TAG} zaten var, atlaniyor (deploy tetiklenmez)"
+          else
+            git tag -a "${TAG}" -m "release ${TAG} (otomatik, version text'inden)"
+            git push origin "${TAG}"
+            echo "Tag ${TAG} atildi -> deploy + desktop sync otomatik tetiklendi"
+          fi

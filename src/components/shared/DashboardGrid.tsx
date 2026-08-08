@@ -38,7 +38,7 @@ export function DashboardGrid({ layout, editing, onLayoutChange, onDeleteWidget 
     <div ref={containerRef}>
       <ResponsiveGridLayout
         className="layout"
-        layouts={{ lg: rglLayout, md: rglLayout, sm: rglLayout, xs: rglLayout, xxs: rglLayout }}
+        layouts={{ lg: rglLayout }}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 12, md: 12, sm: 6, xs: 4, xxs: 2 }}
         rowHeight={60}

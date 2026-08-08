@@ -90,6 +90,7 @@ export default function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/downloads" element={<DownloadsPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/legal/:policy" element={<LegalPage />} />
@@ -114,7 +115,6 @@ export default function App() {
                 <Route path="currency" element={<CurrencyPage />} />
                 <Route path="metals" element={<MetalsPage />} />
                 <Route path="profile" element={<ProfilePage />} />
-                <Route path="downloads" element={<DownloadsPage />} />
                 <Route path="portfolios" element={<PortfolioPage />} />
                 <Route path="portfolios/:portfolioId" element={<PortfolioPage />} />
               </Route>
@@ -123,7 +123,7 @@ export default function App() {
           </ErrorBoundary>
         </BrowserRouter>
         <Toaster
-          position="top-right"
+          position={typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom-center' : 'top-right'}
           richColors
           closeButton
           theme={toasterTheme}

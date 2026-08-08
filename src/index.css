@@ -151,3 +151,21 @@
   z-index: 100;
   opacity: 0.9;
 }
+
+/* ------------------------------------------------------------------ */
+/* Mobil dokunmatik hedefler: 44px minimum (Apple HIG / Material)     */
+/* ------------------------------------------------------------------ */
+@media (max-width: 767px) {
+  button:not(.no-touch-target),
+  [role='button']:not(.no-touch-target),
+  a:not(.no-touch-target),
+  input,
+  select,
+  textarea {
+    min-height: 2.75rem; /* 44px */
+  }
+  /* Butonlardaki ic metin/ikonlari dikey ortala */
+  .react-grid-item .widget-card button:not(.no-touch-target) {
+    min-height: 2rem;
+  }
+}

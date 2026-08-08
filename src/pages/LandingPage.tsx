@@ -56,7 +56,7 @@ export default function LandingPage() {
   const scopeRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={scopeRef} className="min-h-screen flex flex-col bg-background">
+    <div ref={scopeRef} className="min-h-dvh flex flex-col bg-background">
       <FluidBackground />
 
       {/* Top navbar */}
@@ -78,14 +78,14 @@ export default function LandingPage() {
           <Button variant="outline" onClick={() => navigate('/login')} className="bg-white/10 hover:bg-white/20">
             {t('auth.login')}
           </Button>
-          <Button onClick={() => navigate('/register')} className="hidden sm:inline-flex bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-semibold shadow-md">
+          <Button onClick={() => navigate('/register')} className="inline-flex px-3 sm:px-4 text-xs sm:text-sm bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-semibold shadow-md">
             {t('landing.signUp')}
           </Button>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="min-h-[calc(100vh-4rem)] flex flex-col px-4 relative z-10">
+      <section className="min-h-[calc(100dvh-4rem)] flex flex-col px-4 relative z-10">
         <div className="flex-1 flex items-center justify-center">
           <Card className="w-full max-w-3xl bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl">
             <CardContent className="p-8 md:p-12 text-center space-y-8">
