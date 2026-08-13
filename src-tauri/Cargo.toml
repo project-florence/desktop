@@ -1,6 +1,6 @@
 [package]
 name = "florence-desktop"
-version = "0.1.0"
+version = "0.2.4"
 description = "Florence masaüstü istemcisi"
 authors = ["Florence"]
 edition = "2021"
