@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/NumberInput'
 import { toast } from 'sonner'
 import api from '@/lib/api'
 
@@ -73,13 +73,10 @@ export function PortfolioTransactionDialog({ open, onOpenChange, portfolioId, ti
         <div className="space-y-3">
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">{t('portfolio.quantity')}</label>
-            <Input
-              type="number"
-              min="0"
-              step="any"
+            <NumberInput
               placeholder="0"
               value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={setQuantity}
             />
           </div>
           {subtotal != null && subtotal > 0 && (

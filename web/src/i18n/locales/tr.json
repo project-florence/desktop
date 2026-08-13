@@ -54,7 +54,17 @@
     "sellSuccess": "Satış işlemi başarılı",
     "transactionAdded": "İşlem eklendi",
     "insufficientBalance": "Yetersiz bakiye",
-    "insufficientShares": "Yetersiz hisse"
+    "insufficientShares": "Yetersiz hisse",
+    "cagr": "CAGR",
+    "risk": {
+      "title": "Risk Metrikleri",
+      "volatility": "Volatilite",
+      "maxDrawdown": "Max Drawdown",
+      "sharpe": "Sharpe Ratio",
+      "empty": "Risk metrikleri için en az birkaç işlem/günlük veri gerekir"
+    },
+    "benchmark": "Benchmark (XU100)",
+    "difference": "Fark"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -70,6 +80,10 @@
     "registerSuccess": "Kayıt başarılı",
     "networkError": "Sunucuya bağlanılamıyor. İnternet bağlantınızı kontrol edin.",
     "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
+    "usernameOrEmail": "Kullanıcı Adı veya E-posta",
+    "errorEmailTaken": "Bu e-posta adresi zaten kullanılıyor",
+    "errorUsernameTaken": "Bu kullanıcı adı zaten alınmış",
+    "errorLoginFailed": "Kullanıcı adı veya şifre hatalı",
     "acceptPolicies": "Devam etmek için tüm politikaları kabul etmelisiniz"
   },
   "dashboard": {
@@ -169,6 +183,9 @@
     "enterpriseValue": "Enterprise Değer",
     "dividendYield": "Temettü Verimi",
     "targetPrice": "Hedef Fiyat (Ort)",
+    "targetRange": "Hedef Aralığı",
+    "potential": "Potansiyel",
+    "analystCount": "{{count}} analist",
     "peValue": "F/K Değer"
   },
   "watchlist": {
@@ -318,7 +335,8 @@
     "lastUpdated": "Son Güncelleme"
   },
   "about": {
-    "contributors": "Katkıda Bulunanlar"
+    "contributors": "Katkıda Bulunanlar",
+    "version": "Sürüm"
   },
   "announcement": {
     "title": "Duyurular",
@@ -366,7 +384,9 @@
     "widgetSimulation": "Simülasyon",
     "widgetNews": "Haberler",
     "widgetCurrency": "Döviz Kuru",
-    "widgetMetal": "Metal Fiyatı"
+    "widgetMetal": "Metal Fiyatı",
+    "widgetMarketStatus": "Borsa Durumu",
+    "unsavedConfirm": "Kaydedilmemiş değişiklikler var. Yine de çıkmak istiyor musunuz?"
   },
   "onboarding": {
     "title": "Temanı seç",
@@ -436,7 +456,8 @@
     "passwordRequired": "Şifre gerekli",
     "usernameMin": "En az 3 karakter",
     "emailInvalid": "Geçerli bir e-posta girin",
-    "passwordMin": "En az 6 karakter"
+    "passwordMin": "En az 6 karakter",
+    "passwordMin10": "En az 10 karakter"
   },
   "ipo": {
     "active": "Güncel",
@@ -484,10 +505,52 @@
     "major": "Başlıca Kurlar",
     "other": "Diğer Kurlar"
   },
+  "currencies": {
+    "USD": "ABD Doları",
+    "EUR": "Euro",
+    "GBP": "İngiliz Sterlini",
+    "CHF": "İsviçre Frangı",
+    "JPY": "Japon Yeni",
+    "CAD": "Kanada Doları",
+    "AUD": "Avustralya Doları",
+    "RUB": "Rus Rublesi",
+    "CNY": "Çin Yuanı",
+    "INR": "Hindistan Rupisi",
+    "BRL": "Brezilya Reali",
+    "MXN": "Meksika Pesosu",
+    "KRW": "Güney Kore Wonu",
+    "TRY": "Türk Lirası",
+    "SEK": "İsveç Kronu",
+    "NOK": "Norveç Kronu",
+    "DKK": "Danimarka Kronu",
+    "ZAR": "Güney Afrika Randı",
+    "SGD": "Singapur Doları",
+    "HKD": "Hong Kong Doları",
+    "NZD": "Yeni Zelanda Doları",
+    "PLN": "Polonya Zlotisi",
+    "CZK": "Çek Korunası",
+    "HUF": "Macar Forinti",
+    "ILS": "İsrail Şekeli"
+  },
   "favorite": {
     "add": "Favorilere Ekle",
     "remove": "Favoriden Çıkar",
     "loginRequired": "Giriş yapmalısınız"
+  },
+  "market": {
+    "title": "Borsa Durumu",
+    "open": "Açık",
+    "closed": "Kapalı",
+    "nextOpen": "Sonraki Açılış",
+    "timezone": "Saat Dilimi",
+    "holiday": "Tatil"
+  },
+  "contact": {
+    "emailTitle": "E-posta",
+    "githubTitle": "GitHub",
+    "copy": "Kopyala",
+    "copied": "Panoya kopyalandı",
+    "openIssues": "Issues aç"
   },
   "advisorNote": "Analist Önerileri",
   "tooltip": {
@@ -504,7 +567,6 @@
     "platformWindows": "Windows",
     "platformMacos": "macOS",
     "platformLinux": "Linux",
-    "empty": "İndirilebilir sürümler henüz yayınlanmadı.",
-    "note": "Windows için .exe veya .msi, macOS için .dmg, Linux için .AppImage / .deb / .rpm seçebilirsiniz."
+    "empty": "İndirilebilir sürümler henüz yayınlanmadı."
   }
 }

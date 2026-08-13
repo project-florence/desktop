@@ -23,7 +23,7 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>()((set) => ({
-  themeName: 'light' as ThemeName,
+  themeName: 'florence' as ThemeName,
   applyTheme: (name: ThemeName) => {
     const theme = themes[name]
     if (!theme) return

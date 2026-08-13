@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { PALETTE_ITEMS } from '@/types/widget'
 import { Button } from '@/components/ui/button'
-import { Sparkles, Star, TrendingUp, Globe, Building2, LineChart, FlaskConical, Newspaper, DollarSign, Gem, Plus } from 'lucide-react'
+import { Sparkles, Star, TrendingUp, Globe, Building2, LineChart, FlaskConical, Newspaper, DollarSign, Gem, Activity, Plus } from 'lucide-react'
 
 const ICON_MAP: Record<string, typeof Sparkles> = {
   'sparkles': Sparkles,
@@ -14,6 +14,7 @@ const ICON_MAP: Record<string, typeof Sparkles> = {
   'newspaper': Newspaper,
   'dollar-sign': DollarSign,
   'gem': Gem,
+  'activity': Activity,
 }
 
 interface WidgetPaletteProps {

@@ -24,6 +24,15 @@ export default function AboutPage() {
     },
   })
 
+  const { data: version } = useQuery({
+    queryKey: ['version'],
+    queryFn: async () => {
+      const res = await api.get('/api/v1/version')
+      return res.data.version as string
+    },
+    staleTime: 1000 * 60 * 60,
+  })
+
   return (
     <div className="max-w-3xl mx-auto pt-6 md:pt-8 pb-6 md:pb-8">
       <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-4 -ml-2">
@@ -47,6 +56,11 @@ export default function AboutPage() {
         </div>
       )}
       <div className="mt-10 pt-8 border-t border-border/40">
+        {version && (
+          <p className="text-xs text-muted-foreground mb-6">
+            {t('about.version')}: v{version}
+          </p>
+        )}
         <ContributorCard />
       </div>
     </div>

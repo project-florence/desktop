@@ -162,12 +162,23 @@ export function FluidBackground() {
     resize()
 
     let hidden = false
-    function onVisibility() { hidden = document.hidden }
+    function onVisibility() {
+      hidden = document.hidden
+      // Sekme geri geldiğinde loop'u garantiye al: hidden iken kuyruklanmış
+      // rAF callback'inin restore'da tetikleneceğine güvenme — bazı
+      // ortamlar (discard, agresif throttling, embedded webview) bunu
+      // düşürebilir. Burada eski pending frame iptal edilip açıkça yeni bir
+      // frame planlanır, böylece zincir her koşulda yeniden başlar.
+      if (!hidden) {
+        cancelAnimationFrame(animId)
+        animId = requestAnimationFrame(render)
+      }
+    }
     document.addEventListener('visibilitychange', onVisibility)
 
     function render(time: number) {
       if (!hidden) quality.frame()
-      if (hidden) return
+      if (hidden) { animId = requestAnimationFrame(render); return }
       gl.useProgram(program)
       mouseX += (targetMouseX - mouseX) * 0.1
       mouseY += (targetMouseY - mouseY) * 0.1

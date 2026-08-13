@@ -45,7 +45,8 @@ export default function ReportDetailPage() {
 
   const download = async (ftype: 'md' | 'pdf' | 'docx') => {
     try {
-      const res = await api.post(`/api/v1/reports/download?report_id=${id}&ftype=${ftype}`, undefined, {
+      const res = await api.post('/api/v1/reports/download', undefined, {
+        params: { report_id: id, ftype },
         responseType: 'blob',
       })
       const url = URL.createObjectURL(res.data as Blob)

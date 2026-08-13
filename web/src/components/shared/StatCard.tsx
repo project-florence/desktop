@@ -50,7 +50,7 @@ export function StatCard({ title, value, change, loading, sub, positive }: StatC
         <CardContent className="p-4">
           <p className="text-xs text-muted-foreground mb-1">{title}</p>
           <p className={cn(
-            'text-lg font-bold',
+            'text-2xl font-bold',
             positive === true && 'text-success',
             positive === false && 'text-destructive',
           )}>{value}</p>

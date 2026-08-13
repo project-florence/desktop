@@ -71,13 +71,13 @@ api.interceptors.response.use(
       }
       await clearTokens()
       useAuthStore.getState().logout()
-      window.location.href = '/login'
+      window.dispatchEvent(new CustomEvent('auth:unauthorized'))
       return Promise.reject(error)
     }
 
     if (status === 401 && !window.location.pathname.includes('/login')) {
       useAuthStore.getState().logout()
-      window.location.href = '/login'
+      window.dispatchEvent(new CustomEvent('auth:unauthorized'))
     }
     return Promise.reject(error)
   },
