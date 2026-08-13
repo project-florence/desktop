@@ -567,6 +567,7 @@
     "password": "Password (optional)",
     "passwordOptional": "If left blank, a password will be generated and shown only once",
     "createSuccess": "Bot created",
+    "limitReached": "You can create up to 5 bots",
     "createError": "Could not create bot",
     "deleteConfirm": "Are you sure you want to delete the bot {{username}}?",
     "deleted": "Bot deleted",

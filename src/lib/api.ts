@@ -50,18 +50,32 @@ api.interceptors.request.use(async (config) => {
 let refreshing: Promise<boolean> | null = null
 
 async function tryRefresh(): Promise<boolean> {
-  const refreshToken = await getRefreshToken()
-  if (!refreshToken) return false
+  if (isTauri()) {
+    // Tauri: refresh token keyring'den alinir, body'de gonderilir.
+    const refreshToken = await getRefreshToken()
+    if (!refreshToken) return false
+    try {
+      const res = await axios.post(
+        `${baseURL}/api/v1/auth/refresh`,
+        { refresh_token: refreshToken },
+        { withCredentials: true },
+      )
+      await setTokens(res.data.access_token, res.data.refresh_token)
+      return true
+    } catch {
+      await clearTokens()
+      return false
+    }
+  }
+
+  // Web: httpOnly cookie ile refresh; token body'de degil.
+  // Ham axios kullanildigi icin bu istek response interceptor'ina girmez (dongu yok).
   try {
-    const res = await axios.post(
-      `${baseURL}/api/v1/auth/refresh`,
-      { refresh_token: refreshToken },
-      { withCredentials: true },
-    )
-    await setTokens(res.data.access_token, res.data.refresh_token)
-    return true
+    const res = await axios.post(`${baseURL}/api/v1/auth/refresh`, null, {
+      withCredentials: true,
+    })
+    return res.status === 200
   } catch {
-    await clearTokens()
     return false
   }
 }
@@ -74,13 +88,20 @@ api.interceptors.response.use(
       | undefined
     const status = error.response?.status
 
-    if (isTauri() && status === 401 && original && !original._retry) {
+    // /auth/* isteklerinde (login, refresh vb.) refresh deneme — donguye girme.
+    if (original?.url?.includes('/auth/')) {
+      return Promise.reject(error)
+    }
+
+    if (status === 401 && original && !original._retry) {
       original._retry = true
       refreshing = refreshing ?? tryRefresh()
       const ok = await refreshing
       refreshing = null
       if (ok) {
-        original.headers.Authorization = `Bearer ${await getAccessToken()}`
+        if (isTauri()) {
+          original.headers.Authorization = `Bearer ${await getAccessToken()}`
+        }
         return api(original)
       }
       await clearTokens()

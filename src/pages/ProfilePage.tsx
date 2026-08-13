@@ -494,18 +494,18 @@ export default function ProfilePage() {
       </Tabs>
 
       <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="max-h-[min(85dvh,560px)] overflow-y-auto sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t('profile.avatar.selectTitle')}</DialogTitle>
           </DialogHeader>
           {!avatars?.length ? (
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
               {Array.from({ length: 8 }).map((_, i) => (
                 <Skeleton key={i} className="aspect-square w-full rounded-full" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
               {avatars.map((avatar) => {
                 const isActive = avatar.id === profile?.avatar_id
                 return (
