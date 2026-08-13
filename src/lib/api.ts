@@ -23,6 +23,20 @@ const api = axios.create({
   },
 })
 
+/**
+ * Backend tarafindan servis edilen asset'lerin (orn. /avatars/*.svg) tam URL'ini cozer.
+ * Dev'de Vite proxy'si yalnizca /api'yi kapsar; prod'da nginx same-origin sunar.
+ */
+export function resolveApiUrl(path: string): string {
+  if (isTauri()) {
+    return `${import.meta.env.VITE_API_URL || 'https://api.florencex.com.tr'}${path}`
+  }
+  if (import.meta.env.DEV) {
+    return `${import.meta.env.VITE_API_URL || 'http://localhost:7055'}${path}`
+  }
+  return path
+}
+
 api.interceptors.request.use(async (config) => {
   if (isTauri()) {
     const token = await getAccessToken()

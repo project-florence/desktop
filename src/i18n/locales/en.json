@@ -84,6 +84,7 @@
     "errorEmailTaken": "This email is already in use",
     "errorUsernameTaken": "This username is already taken",
     "errorLoginFailed": "Invalid username or password",
+    "errorEmailNotVerified": "Your email is not verified. Please verify your email address.",
     "acceptPolicies": "You must accept all policies to continue"
   },
   "dashboard": {
@@ -286,7 +287,13 @@
     "deleteDesc": "Permanently delete your account. This action cannot be undone.",
     "passwordRequired": "Your current password is required for this action",
     "confirmDelete": "Are you sure you want to delete your account? This action cannot be undone.",
-    "accountDeleted": "Account deleted"
+    "accountDeleted": "Account deleted",
+    "bots": "Bots",
+    "avatar": {
+      "change": "Change Avatar",
+      "selectTitle": "Choose Avatar",
+      "saved": "Avatar saved"
+    }
   },
   "reports": {
     "title": "Reports",
@@ -550,7 +557,25 @@
     "githubTitle": "GitHub",
     "copy": "Copy",
     "copied": "Copied to clipboard",
-    "openIssues": "Open Issues"
+    "openGithub": "Open on GitHub"
+  },
+  "bots": {
+    "title": "My Bots",
+    "empty": "You haven't created any bots yet",
+    "create": "Create Bot",
+    "username": "Bot username",
+    "password": "Password (optional)",
+    "passwordOptional": "If left blank, a password will be generated and shown only once",
+    "createSuccess": "Bot created",
+    "createError": "Could not create bot",
+    "deleteConfirm": "Are you sure you want to delete the bot {{username}}?",
+    "deleted": "Bot deleted",
+    "createdAt": "Created",
+    "passwordTitle": "Bot Password",
+    "passwordOneTime": "This password is shown only once. Please store it somewhere safe.",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied to clipboard"
   },
   "advisorNote": "Analyst Recommendations",
   "tooltip": {

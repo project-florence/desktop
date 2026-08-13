@@ -370,6 +370,23 @@ export interface Profile {
   credits: number
   user_type: string
   created_at?: string
+  avatar_id?: string | null
+}
+
+export interface AvatarMeta {
+  id: string
+  url: string
+}
+
+export interface Bot {
+  id: number
+  username: string
+  created_at: string
+}
+
+export interface BotCreateResponse {
+  username: string
+  password?: string
 }
 
 export interface Announcement {

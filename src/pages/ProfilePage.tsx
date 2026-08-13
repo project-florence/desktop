@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { LogOut, User, Key, Download, Trash2, ArrowLeft, Settings, Palette, Globe, Megaphone, Plus, Pencil, Trash, PackageOpen } from 'lucide-react'
+import { LogOut, User, Key, Download, Trash2, ArrowLeft, Settings, Palette, Globe, Megaphone, Plus, Pencil, Trash, PackageOpen, Bot } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
@@ -18,11 +18,12 @@ import { themes } from '@/config/themes'
 import type { ThemeName } from '@/config/themes'
 import { usePreferences } from '@/hooks/usePreferences'
 import { usePageTitle } from '@/hooks/usePageTitle'
-import api from '@/lib/api'
+import api, { resolveApiUrl } from '@/lib/api'
 import { cn } from '@/lib/utils'
-import type { Profile, Announcement } from '@/types/api'
+import type { Profile, Announcement, AvatarMeta } from '@/types/api'
 import { CreditDisplay } from '@/components/shared/CreditDisplay'
 import { DownloadsContent } from '@/components/shared/DownloadsContent'
+import { BotsSection } from '@/components/shared/BotsSection'
 
 export default function ProfilePage() {
   const { t, i18n } = useTranslation()
@@ -53,6 +54,30 @@ export default function ProfilePage() {
 
   const [deletePassword, setDeletePassword] = useState('')
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState(false)
+
+  const { data: avatars } = useQuery({
+    queryKey: ['avatars'],
+    queryFn: async () => {
+      const res = await api.get('/api/v1/meta/avatars')
+      return res.data as AvatarMeta[]
+    },
+    enabled: avatarDialogOpen,
+    staleTime: 5 * 60_000,
+  })
+
+  const avatarMutation = useMutation({
+    mutationFn: async (avatarId: string) => {
+      await api.put('/api/v1/profile/avatar', { avatar_id: avatarId })
+    },
+    onSuccess: () => {
+      toast.success(t('profile.avatar.saved'))
+      setAvatarDialogOpen(false)
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
+    },
+    onError: () => toast.error(t('common.error')),
+  })
 
   const usernameMutation = useMutation({
     mutationFn: async () => {
@@ -137,10 +162,18 @@ export default function ProfilePage() {
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
         <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5">
           <CardContent className="p-5 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <User className="h-6 w-6 text-primary" />
-            </div>
-            <div>
+            {profile?.avatar_id ? (
+              <img
+                src={resolveApiUrl(`/avatars/${profile.avatar_id}.svg`)}
+                alt={profile.username}
+                className="h-12 w-12 shrink-0 rounded-full object-cover"
+              />
+            ) : (
+              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <User className="h-6 w-6 text-primary" />
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
               <p className="text-lg font-bold">{profile?.username}</p>
               <p className="text-sm text-muted-foreground">{profile?.email}</p>
               {profile?.created_at && (
@@ -157,6 +190,10 @@ export default function ProfilePage() {
                 {profile?.user_type === 'admin' ? t('profile.admin') : t('profile.user')}
               </span>
             </div>
+            <Button variant="outline" size="sm" className="shrink-0" onClick={() => setAvatarDialogOpen(true)}>
+              <Pencil className="h-3.5 w-3.5 mr-1.5" />
+              {t('profile.avatar.change')}
+            </Button>
           </CardContent>
         </Card>
         <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/5">
@@ -187,6 +224,10 @@ export default function ProfilePage() {
           <TabsTrigger value="downloads" className="flex-1">
             <PackageOpen className="h-4 w-4 mr-2" />
             {t('downloads.pageTitle')}
+          </TabsTrigger>
+          <TabsTrigger value="bots" className="flex-1">
+            <Bot className="h-4 w-4 mr-2" />
+            {t('profile.bots')}
           </TabsTrigger>
           {profile?.user_type === 'admin' && (
             <TabsTrigger value="admin" className="flex-1">
@@ -442,12 +483,56 @@ export default function ProfilePage() {
         <TabsContent value="downloads" className="mt-4">
           <DownloadsContent />
         </TabsContent>
+        <TabsContent value="bots" className="mt-4">
+          <BotsSection />
+        </TabsContent>
         {profile?.user_type === 'admin' && (
           <TabsContent value="admin" className="mt-4 space-y-4">
             <AdminAnnouncements />
           </TabsContent>
         )}
       </Tabs>
+
+      <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('profile.avatar.selectTitle')}</DialogTitle>
+          </DialogHeader>
+          {!avatars?.length ? (
+            <div className="grid grid-cols-4 gap-3">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <Skeleton key={i} className="aspect-square w-full rounded-full" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-4 gap-3">
+              {avatars.map((avatar) => {
+                const isActive = avatar.id === profile?.avatar_id
+                return (
+                  <button
+                    key={avatar.id}
+                    type="button"
+                    disabled={avatarMutation.isPending}
+                    onClick={() => avatarMutation.mutate(avatar.id)}
+                    className={cn(
+                      'aspect-square w-full rounded-full transition-all duration-200',
+                      isActive
+                        ? 'ring-2 ring-primary ring-offset-2 ring-offset-popover'
+                        : 'hover:ring-2 hover:ring-primary/40 hover:ring-offset-2 hover:ring-offset-popover',
+                    )}
+                  >
+                    <img
+                      src={resolveApiUrl(avatar.url)}
+                      alt={avatar.id}
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  </button>
+                )
+              })}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
