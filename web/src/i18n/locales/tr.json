@@ -84,6 +84,7 @@
     "errorEmailTaken": "Bu e-posta adresi zaten kullanılıyor",
     "errorUsernameTaken": "Bu kullanıcı adı zaten alınmış",
     "errorLoginFailed": "Kullanıcı adı veya şifre hatalı",
+    "errorEmailNotVerified": "E-postanız doğrulanmadı. Lütfen e-posta adresinizi doğrulayın.",
     "acceptPolicies": "Devam etmek için tüm politikaları kabul etmelisiniz"
   },
   "dashboard": {
@@ -286,7 +287,13 @@
     "deleteDesc": "Hesabınızı kalıcı olarak silin. Bu işlem geri alınamaz.",
     "passwordRequired": "Bu işlem için mevcut şifreniz gereklidir",
     "confirmDelete": "Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
-    "accountDeleted": "Hesap silindi"
+    "accountDeleted": "Hesap silindi",
+    "bots": "Botlar",
+    "avatar": {
+      "change": "Avatarı Değiştir",
+      "selectTitle": "Avatar Seç",
+      "saved": "Avatar kaydedildi"
+    }
   },
   "reports": {
     "title": "Raporlar",
@@ -550,7 +557,25 @@
     "githubTitle": "GitHub",
     "copy": "Kopyala",
     "copied": "Panoya kopyalandı",
-    "openIssues": "Issues aç"
+    "openGithub": "GitHub'da Aç"
+  },
+  "bots": {
+    "title": "Botlarım",
+    "empty": "Henüz bot oluşturmadınız",
+    "create": "Bot Oluştur",
+    "username": "Bot kullanıcı adı",
+    "password": "Şifre (opsiyonel)",
+    "passwordOptional": "Boş bırakılırsa şifre otomatik oluşturulur ve yalnızca bir kez gösterilir",
+    "createSuccess": "Bot oluşturuldu",
+    "createError": "Bot oluşturulamadı",
+    "deleteConfirm": "{{username}} botunu silmek istediğinize emin misiniz?",
+    "deleted": "Bot silindi",
+    "createdAt": "Oluşturulma",
+    "passwordTitle": "Bot Şifresi",
+    "passwordOneTime": "Bu şifre yalnızca bir kez gösterilir. Lütfen güvenli bir yerde saklayın.",
+    "close": "Kapat",
+    "copy": "Kopyala",
+    "copied": "Panoya kopyalandı"
   },
   "advisorNote": "Analist Önerileri",
   "tooltip": {

@@ -39,9 +39,8 @@ export default function ContactPage() {
     }
   }
 
-  const githubIssuesUrl = data?.github
-    ? `${data.github.replace(/\/$/, '')}/issues`
-    : undefined
+  // Backend CONTACT.github zaten org ana sayfasini doner; '/issues' eklenmez (404 veriyor).
+  const githubUrl = data?.github
 
   return (
     <div className="max-w-xl mx-auto pt-6 md:pt-8 pb-6 md:pb-8">
@@ -95,11 +94,11 @@ export default function ContactPage() {
                   {data?.github}
                 </a>
               </div>
-              {githubIssuesUrl && (
-                <a href={githubIssuesUrl} target="_blank" rel="noopener noreferrer">
+              {githubUrl && (
+                <a href={githubUrl} target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" size="sm">
                     <ExternalLink className="h-4 w-4 mr-1" />
-                    {t('contact.openIssues')}
+                    {t('contact.openGithub')}
                   </Button>
                 </a>
               )}

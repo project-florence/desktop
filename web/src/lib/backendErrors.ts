@@ -8,6 +8,7 @@ export const BACKEND_ERROR_KEYS: Record<string, string> = {
   error_email_taken: 'auth.errorEmailTaken',
   error_username_taken: 'auth.errorUsernameTaken',
   error_login_failed: 'auth.errorLoginFailed',
+  error_email_not_verified: 'auth.errorEmailNotVerified',
 }
 
 /** detail bir bilinen backend koduysa çevrilmiş mesajı, değilse undefined döner. */
