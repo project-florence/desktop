@@ -36,6 +36,7 @@ export const WIDGET_TYPES = {
   NEWS_FEED: 'news_feed',
   CURRENCY_PAIR: 'currency_pair',
   METAL_PRICE: 'metal_price',
+  MARKET_STATUS: 'market_status',
 } as const
 
 export const PALETTE_ITEMS: PaletteItem[] = [
@@ -49,6 +50,7 @@ export const PALETTE_ITEMS: PaletteItem[] = [
   { type: WIDGET_TYPES.NEWS_FEED, labelKey: 'customization.widgetNews', icon: 'newspaper', defaultW: 4, defaultH: 3, defaultConfig: { ticker: 'THYAO' } },
   { type: WIDGET_TYPES.CURRENCY_PAIR, labelKey: 'customization.widgetCurrency', icon: 'dollar-sign', defaultW: 3, defaultH: 2, defaultConfig: { code: 'USD' } },
   { type: WIDGET_TYPES.METAL_PRICE, labelKey: 'customization.widgetMetal', icon: 'gem', defaultW: 3, defaultH: 2, defaultConfig: { metal: 'gram-altin' } },
+  { type: WIDGET_TYPES.MARKET_STATUS, labelKey: 'customization.widgetMarketStatus', icon: 'activity', defaultW: 4, defaultH: 2 },
 ]
 
 export const DEFAULT_LAYOUT: DashboardLayout = {
@@ -59,5 +61,6 @@ export const DEFAULT_LAYOUT: DashboardLayout = {
     { id: 'usd', type: WIDGET_TYPES.STAT_CARD, x: 4, y: 7, w: 4, h: 2, config: { titleKey: 'dashboard.usd', dataSource: 'currency', pair: 'USD' } },
     { id: 'eur', type: WIDGET_TYPES.STAT_CARD, x: 8, y: 7, w: 4, h: 2, config: { titleKey: 'dashboard.eur', dataSource: 'currency', pair: 'EUR' } },
     { id: 'macro', type: WIDGET_TYPES.MACROECONOMY, x: 0, y: 9, w: 12, h: 3 },
+    { id: 'market', type: WIDGET_TYPES.MARKET_STATUS, x: 0, y: 12, w: 4, h: 2 },
   ],
 }

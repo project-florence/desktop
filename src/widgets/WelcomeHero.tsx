@@ -6,6 +6,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { StockSearch } from '@/components/shared/StockSearch'
 import { BarChart3, Search, FlaskConical, TrendingUp } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { useMarketStatus } from '@/hooks/useMarketStatus'
 import api from '@/lib/api'
 
 function getGreetingEmoji(h: number): string {
@@ -43,6 +45,8 @@ export default function WelcomeHero() {
     staleTime: 5 * 60_000,
   })
 
+  const { data: market } = useMarketStatus()
+
   const hour = now.getHours()
   const greeting = getGreeting()
   const emoji = getGreetingEmoji(hour)
@@ -66,6 +70,19 @@ export default function WelcomeHero() {
               <span className="text-sm tabular-nums">
                 {now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })}
               </span>
+              {market && (
+                <span
+                  className={cn(
+                    'inline-flex items-center gap-1 text-[11px] font-medium rounded-full px-2 py-0.5 border',
+                    market.open
+                      ? 'text-success border-success/30 bg-success/10'
+                      : 'text-muted-foreground border-border bg-muted/50',
+                  )}
+                >
+                  <span className={cn('h-1.5 w-1.5 rounded-full', market.open ? 'bg-success animate-pulse' : 'bg-muted-foreground/60')} />
+                  {market.open ? t('market.open') : t('market.closed')}
+                </span>
+              )}
             </div>
           </div>
 

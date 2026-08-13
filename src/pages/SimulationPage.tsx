@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton'
 import { StockSearch } from '@/components/shared/StockSearch'
 import { CreditCostTooltip } from '@/components/shared/CreditCostTooltip'
+import { NumberInput } from '@/components/ui/NumberInput'
 import { cn } from '@/lib/utils'
 import { Target, FlaskConical, BarChart3, Coins, TrendingUp, Wrench } from 'lucide-react'
 import api from '@/lib/api'
@@ -172,13 +173,11 @@ export default function SimulationPage() {
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">₺</span>
-                <input
-                  type="number"
-                  step="0.01"
-                    placeholder={currentPrice ? `Otomatik: ₺${(currentPrice * 1.1).toFixed(2)}` : t('simulationLabels.autoTarget')}
+                <NumberInput
+                  placeholder={currentPrice ? `Otomatik: ₺${(currentPrice * 1.1).toFixed(2)}` : t('simulationLabels.autoTarget')}
                   value={target}
-                  onChange={(e) => { setTarget(e.target.value); setRun(false) }}
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pl-7"
+                  onChange={(raw) => { setTarget(raw); setRun(false) }}
+                  className="pl-7"
                 />
               </div>
               {currentPrice && (

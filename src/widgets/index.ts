@@ -9,6 +9,7 @@ import SimulationWidget from './SimulationWidget'
 import NewsFeedWidget from './NewsFeedWidget'
 import CurrencyPairWidget from './CurrencyPairWidget'
 import MetalPriceWidget from './MetalPriceWidget'
+import MarketStatusWidget from './MarketStatusWidget'
 
 export type WidgetComponent = ComponentType<{ config?: Record<string, unknown> }>
 
@@ -23,4 +24,5 @@ export const WIDGET_MAP: Record<string, WidgetComponent> = {
   news_feed: NewsFeedWidget,
   currency_pair: CurrencyPairWidget,
   metal_price: MetalPriceWidget,
+  market_status: MarketStatusWidget,
 }

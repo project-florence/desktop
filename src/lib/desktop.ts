@@ -3,6 +3,11 @@ import { invoke } from '@tauri-apps/api/core'
 const ACCESS_KEY = 'florence_access_token'
 const REFRESH_KEY = 'florence_refresh_token'
 
+// Keyring yoksa refresh token yalnızca bellekte tutulur (localStorage'a asla yazılmaz).
+let memoryRefreshToken: string | null = null
+// Eski localStorage kalıntılarından keyring'e migrasyon yalnızca bir kez denenir.
+let migrationAttempted = false
+
 export function isTauri(): boolean {
   return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
 }
@@ -51,8 +56,11 @@ export async function getAccessToken(): Promise<string | null> {
   if (secure) return secure
   const ls = lsGet(ACCESS_KEY)
   if (ls) {
-    const refresh = lsGet(REFRESH_KEY) ?? ''
-    void setTokens(ls, refresh)
+    if (!migrationAttempted) {
+      migrationAttempted = true
+      const refresh = lsGet(REFRESH_KEY) ?? ''
+      void setTokens(ls, refresh)
+    }
     return ls
   }
   return null
@@ -62,10 +70,14 @@ export async function getRefreshToken(): Promise<string | null> {
   if (!isTauri()) return null
   const secure = await secureGet(REFRESH_KEY)
   if (secure) return secure
+  if (memoryRefreshToken) return memoryRefreshToken
   const ls = lsGet(REFRESH_KEY)
   if (ls) {
-    const access = lsGet(ACCESS_KEY) ?? ''
-    void setTokens(access, ls)
+    if (!migrationAttempted) {
+      migrationAttempted = true
+      const access = lsGet(ACCESS_KEY) ?? ''
+      void setTokens(access, ls)
+    }
     return ls
   }
   return null
@@ -76,11 +88,15 @@ export async function setTokens(accessToken: string, refreshToken: string): Prom
   const accessOk = await secureSet(ACCESS_KEY, accessToken)
   const refreshOk = await secureSet(REFRESH_KEY, refreshToken)
   if (accessOk && refreshOk) {
+    memoryRefreshToken = null
     lsRemove(ACCESS_KEY)
     lsRemove(REFRESH_KEY)
   } else {
+    // Keyring başarısız: access token localStorage'a düşer (fallback),
+    // refresh token asla localStorage'a yazılmaz, yalnızca bellekte tutulur.
+    memoryRefreshToken = refreshToken
     lsSet(ACCESS_KEY, accessToken)
-    lsSet(REFRESH_KEY, refreshToken)
+    lsRemove(REFRESH_KEY)
   }
 }
 
@@ -88,6 +104,8 @@ export async function clearTokens(): Promise<void> {
   if (!isTauri()) return
   await secureDelete(ACCESS_KEY)
   await secureDelete(REFRESH_KEY)
+  memoryRefreshToken = null
+  migrationAttempted = false
   lsRemove(ACCESS_KEY)
   lsRemove(REFRESH_KEY)
 }

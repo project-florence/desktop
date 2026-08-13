@@ -181,8 +181,8 @@ export default function StockDetailPage() {
           {t('common.back')}
         </Button>
         <div className="text-center py-20">
-          <h2 className="text-xl font-semibold mb-2">Hisse bilgisi yuklenemedi</h2>
-          <p className="text-muted-foreground mb-4">{ticker} icin veri alinamadi.</p>
+          <h2 className="text-xl font-semibold mb-2">Hisse bilgisi yüklenemedi</h2>
+          <p className="text-muted-foreground mb-4">{ticker} için veri alınamadı.</p>
           <Button variant="outline" onClick={() => window.location.reload()}>
             Tekrar Dene
           </Button>
@@ -260,7 +260,7 @@ export default function StockDetailPage() {
               </Button>
               <Button variant="outline" size="sm" onClick={async () => {
                 try {
-                  const res = await api.get(`/api/v1/companies/info/${ticker}/md`, { responseType: 'blob' })
+                  const res = await api.get(`/api/v1/companies/info/${encodeURIComponent(ticker)}/md`, { responseType: 'blob' })
                   const url = URL.createObjectURL(res.data as Blob)
                   const a = document.createElement('a')
                   a.href = url
@@ -290,9 +290,14 @@ export default function StockDetailPage() {
       )}
 
       {info?.recommendations?.[0] && (
-        <div className="max-w-sm">
-          <RecommendationsGauge data={info.recommendations[0]} />
-        </div>
+        <RecommendationsGauge
+          data={info.recommendations[0]}
+          targetMean={v?.targetMeanPrice ?? null}
+          targetLow={v?.targetLowPrice ?? null}
+          targetHigh={v?.targetHighPrice ?? null}
+          currentPrice={currentPrice ?? null}
+          analystCount={v?.numberOfAnalystOpinions ?? null}
+        />
       )}
 
       {v && (

@@ -12,10 +12,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Globe, ExternalLink } from 'lucide-react'
+import { Globe, ExternalLink, ArrowLeft } from 'lucide-react'
 import { HyperspaceBackground } from '@/components/shared/HyperspaceBackground'
 import { useAuthStore } from '@/stores/authStore'
 import api from '@/lib/api'
+import { translateBackendDetail } from '@/lib/backendErrors'
 import type { AxiosError } from 'axios'
 import florenceLogo from '@/assets/florence_logo.svg'
 
@@ -79,13 +80,15 @@ function PolicyViewer({ policy, onClose }: { policy: Policy | null; onClose: () 
   )
 }
 
-const registerSchema = z.object({
-  username: z.string().min(3, 'En az 3 karakter'),
-  email: z.string().email('Geçerli bir e-posta girin'),
-  password: z.string().min(10, 'En az 10 karakter'),
-})
+type RegisterForm = z.infer<ReturnType<typeof registerSchema>>
 
-type RegisterForm = z.infer<typeof registerSchema>
+function registerSchema(t: (key: string) => string) {
+  return z.object({
+    username: z.string().min(3, t('validation.usernameMin')),
+    email: z.string().email(t('validation.emailInvalid')),
+    password: z.string().min(10, t('validation.passwordMin10')),
+  })
+}
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation()
@@ -109,7 +112,7 @@ export default function RegisterPage() {
     watch,
     formState: { errors },
   } = useForm<RegisterForm>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerSchema(t)),
   })
 
   const formValues = watch()
@@ -128,7 +131,8 @@ export default function RegisterPage() {
     } catch (err) {
       const error = err as AxiosError<{ detail: string | { msg: string }[] }>
       const detail = error.response?.data?.detail
-      const message = Array.isArray(detail) ? detail[0]?.msg : detail
+      const mapped = translateBackendDetail(t, detail)
+      const message = mapped || (Array.isArray(detail) ? detail[0]?.msg : detail)
       toast.error(message || t('auth.registerError'))
     } finally {
       setLoading(false)
@@ -159,6 +163,12 @@ export default function RegisterPage() {
         onHyperdriveComplete={handleHyperdriveComplete}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/10 to-background/30 backdrop-blur-[1px]" />
+      <div className="absolute top-4 left-4 z-10">
+        <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          {t('common.back')}
+        </Button>
+      </div>
       <div className="relative z-10 w-full max-w-full md:max-w-md animate-fadeIn">
         <Card className="w-full bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl animate-slideUp">
           <CardHeader className="text-center">

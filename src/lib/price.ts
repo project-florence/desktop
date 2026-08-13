@@ -27,7 +27,7 @@ export function aggregateToInterval(data: PriceHistory[], interval: string): Pri
     const date = new Date(d.ts)
     const key = interval === '1wk'
       ? getWeekStart(date)
-      : `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+      : `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`
     if (!buckets.has(key)) buckets.set(key, [])
     buckets.get(key)!.push(d)
   }

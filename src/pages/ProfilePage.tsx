@@ -32,6 +32,7 @@ export default function ProfilePage() {
   const themeName = useThemeStore((s) => s.themeName)
   const applyTheme = useThemeStore((s) => s.applyTheme)
   const { save: savePrefs } = usePreferences()
+  const queryClient = useQueryClient()
 
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['profile'],
@@ -108,6 +109,7 @@ export default function ProfilePage() {
     onSuccess: () => {
       toast.success(t('profile.accountDeleted'))
       logout()
+      queryClient.clear()
       navigate('/login', { replace: true })
     },
     onError: () => toast.error(t('common.error')),
@@ -255,6 +257,7 @@ export default function ProfilePage() {
               className="text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 transition-all duration-200"
               onClick={() => {
                 logout()
+                queryClient.clear()
                 navigate('/login', { replace: true })
               }}
             >

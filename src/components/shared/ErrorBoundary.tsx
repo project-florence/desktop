@@ -7,18 +7,20 @@ interface Props {
 
 interface State {
   hasError: boolean
-  error: Error | null
+  errorId: string | null
 }
 
 export class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false, error: null }
+  state: State = { hasError: false, errorId: null }
 
-  static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error }
+  static getDerivedStateFromError(): State {
+    return { hasError: true, errorId: crypto.randomUUID() }
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.warn('ErrorBoundary caught:', error, info.componentStack)
+    if (import.meta.env.DEV) {
+      console.warn('ErrorBoundary caught:', error, info.componentStack)
+    }
   }
 
   render() {
@@ -31,6 +33,9 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-sm text-muted-foreground max-w-md">
               Beklenmeyen bir hata meydana geldi. Lütfen sayfayı yenileyin.
             </p>
+            {this.state.errorId && (
+              <p className="text-xs text-muted-foreground/60">Hata kodu: {this.state.errorId}</p>
+            )}
             <button
               type="button"
               onClick={() => window.location.reload()}

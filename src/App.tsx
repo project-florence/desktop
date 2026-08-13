@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
+import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
@@ -70,9 +70,29 @@ function TelemetryProvider() {
   return null
 }
 
+function AuthUnauthorizedHandler() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    const handler = () => {
+      queryClient.clear()
+      navigate('/login', { replace: true })
+    }
+    window.addEventListener('auth:unauthorized', handler)
+    return () => window.removeEventListener('auth:unauthorized', handler)
+  }, [navigate, queryClient])
+
+  return null
+}
+
 export default function App() {
   useEffect(() => {
     useMaintenanceStore.getState().fetchDisabled()
+    const interval = setInterval(() => {
+      useMaintenanceStore.getState().fetchDisabled()
+    }, 60_000)
+    return () => clearInterval(interval)
   }, [])
 
   const themeName = useThemeStore((s) => s.themeName)
@@ -83,6 +103,7 @@ export default function App() {
       <TooltipProvider>
         <BrowserRouter>
           <TelemetryProvider />
+          <AuthUnauthorizedHandler />
           <ErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             <Routes>

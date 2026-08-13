@@ -14,15 +14,19 @@ import { HyperspaceBackground } from '@/components/shared/HyperspaceBackground'
 import { useAuthStore } from '@/stores/authStore'
 import api from '@/lib/api'
 import { isTauri, setTokens } from '@/lib/desktop'
+import { translateBackendDetail } from '@/lib/backendErrors'
+import { ArrowLeft } from 'lucide-react'
 import type { AxiosError } from 'axios'
 import florenceLogo from '@/assets/florence_logo.svg'
 
-const loginSchema = z.object({
-  username: z.string().min(1, 'Kullanıcı adı gerekli'),
-  password: z.string().min(1, 'Şifre gerekli'),
-})
+type LoginForm = z.infer<ReturnType<typeof loginSchema>>
 
-type LoginForm = z.infer<typeof loginSchema>
+function loginSchema(t: (key: string) => string) {
+  return z.object({
+    username: z.string().min(1, t('validation.usernameRequired')),
+    password: z.string().min(1, t('validation.passwordRequired')),
+  })
+}
 
 export default function LoginPage() {
   const { t, i18n } = useTranslation()
@@ -54,7 +58,7 @@ export default function LoginPage() {
     watch,
     formState: { errors },
   } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema(t)),
   })
 
   const formValues = watch()
@@ -89,7 +93,8 @@ export default function LoginPage() {
         toast.error(t('auth.serverError'))
       } else {
         const detail = error.response.data?.detail
-        const message = Array.isArray(detail) ? detail[0]?.msg : detail
+        const mapped = translateBackendDetail(t, detail)
+        const message = mapped || (Array.isArray(detail) ? detail[0]?.msg : detail)
         toast.error(message || t('auth.loginError'))
       }
     } finally {
@@ -108,6 +113,12 @@ export default function LoginPage() {
         onHyperdriveComplete={handleHyperdriveComplete}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/10 to-background/30 backdrop-blur-[1px]" />
+      <div className="absolute top-4 left-4 z-10">
+        <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          {t('common.back')}
+        </Button>
+      </div>
       <div className="relative z-10 w-full max-w-md animate-fadeIn">
         <Card className="w-full bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl animate-slideUp">
           <CardHeader className="text-center">
@@ -119,7 +130,7 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <Input
-                  placeholder={t('auth.username')}
+                  placeholder={t('auth.usernameOrEmail')}
                   className="transition-all duration-200 focus-visible:ring-[3px] focus-visible:ring-primary/30"
                   {...register('username')}
                 />

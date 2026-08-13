@@ -54,7 +54,17 @@
     "sellSuccess": "Sell order successful",
     "transactionAdded": "Transaction added",
     "insufficientBalance": "Insufficient balance",
-    "insufficientShares": "Insufficient shares"
+    "insufficientShares": "Insufficient shares",
+    "cagr": "CAGR",
+    "risk": {
+      "title": "Risk Metrics",
+      "volatility": "Volatility",
+      "maxDrawdown": "Max Drawdown",
+      "sharpe": "Sharpe Ratio",
+      "empty": "At least a few transactions/daily data points are required for risk metrics"
+    },
+    "benchmark": "Benchmark (XU100)",
+    "difference": "Difference"
   },
   "auth": {
     "login": "Login",
@@ -70,6 +80,10 @@
     "registerSuccess": "Registration successful",
     "networkError": "Cannot connect to server. Please check your internet connection.",
     "serverError": "Server error. Please try again later.",
+    "usernameOrEmail": "Username or Email",
+    "errorEmailTaken": "This email is already in use",
+    "errorUsernameTaken": "This username is already taken",
+    "errorLoginFailed": "Invalid username or password",
     "acceptPolicies": "You must accept all policies to continue"
   },
   "dashboard": {
@@ -169,6 +183,9 @@
     "enterpriseValue": "Enterprise Value",
     "dividendYield": "Dividend Yield",
     "targetPrice": "Target Price (Avg)",
+    "targetRange": "Target Range",
+    "potential": "Upside",
+    "analystCount": "{{count}} analysts",
     "peValue": "P/E Value"
   },
   "watchlist": {
@@ -318,7 +335,8 @@
     "lastUpdated": "Last Updated"
   },
   "about": {
-    "contributors": "Contributors"
+    "contributors": "Contributors",
+    "version": "Version"
   },
   "announcement": {
     "title": "Announcements",
@@ -366,7 +384,9 @@
     "widgetSimulation": "Simulation",
     "widgetNews": "News Feed",
     "widgetCurrency": "Currency Pair",
-    "widgetMetal": "Metal Price"
+    "widgetMetal": "Metal Price",
+    "widgetMarketStatus": "Market Status",
+    "unsavedConfirm": "You have unsaved changes. Leave anyway?"
   },
   "onboarding": {
     "title": "Choose your theme",
@@ -436,7 +456,8 @@
     "passwordRequired": "Password is required",
     "usernameMin": "At least 3 characters",
     "emailInvalid": "Enter a valid email",
-    "passwordMin": "At least 6 characters"
+    "passwordMin": "At least 6 characters",
+    "passwordMin10": "At least 10 characters"
   },
   "ipo": {
     "active": "Active",
@@ -484,10 +505,52 @@
     "major": "Major Rates",
     "other": "Other Rates"
   },
+  "currencies": {
+    "USD": "US Dollar",
+    "EUR": "Euro",
+    "GBP": "British Pound",
+    "CHF": "Swiss Franc",
+    "JPY": "Japanese Yen",
+    "CAD": "Canadian Dollar",
+    "AUD": "Australian Dollar",
+    "RUB": "Russian Ruble",
+    "CNY": "Chinese Yuan",
+    "INR": "Indian Rupee",
+    "BRL": "Brazilian Real",
+    "MXN": "Mexican Peso",
+    "KRW": "South Korean Won",
+    "TRY": "Turkish Lira",
+    "SEK": "Swedish Krona",
+    "NOK": "Norwegian Krone",
+    "DKK": "Danish Krone",
+    "ZAR": "South African Rand",
+    "SGD": "Singapore Dollar",
+    "HKD": "Hong Kong Dollar",
+    "NZD": "New Zealand Dollar",
+    "PLN": "Polish Zloty",
+    "CZK": "Czech Koruna",
+    "HUF": "Hungarian Forint",
+    "ILS": "Israeli Shekel"
+  },
   "favorite": {
     "add": "Add to Favorites",
     "remove": "Remove from Favorites",
     "loginRequired": "You must log in first"
+  },
+  "market": {
+    "title": "Market Status",
+    "open": "Open",
+    "closed": "Closed",
+    "nextOpen": "Next Open",
+    "timezone": "Timezone",
+    "holiday": "Holiday"
+  },
+  "contact": {
+    "emailTitle": "Email",
+    "githubTitle": "GitHub",
+    "copy": "Copy",
+    "copied": "Copied to clipboard",
+    "openIssues": "Open Issues"
   },
   "advisorNote": "Analyst Recommendations",
   "tooltip": {
@@ -504,7 +567,6 @@
     "platformWindows": "Windows",
     "platformMacos": "macOS",
     "platformLinux": "Linux",
-    "empty": "No releases available yet.",
-    "note": "Windows: .exe or .msi, macOS: .dmg, Linux: .AppImage / .deb / .rpm."
+    "empty": "No releases available yet."
   }
 }

@@ -135,7 +135,6 @@ export function DownloadsContent() {
           )
         })}
       </div>
-      <p className="text-xs text-muted-foreground">{t('downloads.note')}</p>
     </div>
   )
 }

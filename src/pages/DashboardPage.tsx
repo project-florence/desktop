@@ -6,13 +6,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Settings2, PackageOpen } from 'lucide-react'
 import { DashboardGrid } from '@/components/shared/DashboardGrid'
 import { CustomizationPanel } from '@/components/shared/CustomizationPanel'
+import { PreferenceControls } from '@/components/shared/PreferenceControls'
 import { usePreferences } from '@/hooks/usePreferences'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { DEFAULT_LAYOUT, PALETTE_ITEMS } from '@/types/widget'
 import type { WidgetLayout } from '@/types/widget'
 import type { UserPreferences } from '@/types/api'
-
-let nextWidgetId = 100
 
 export default function DashboardPage() {
   const { t } = useTranslation()
@@ -42,7 +41,7 @@ export default function DashboardPage() {
   const handleAddWidget = (type: string, config?: Record<string, unknown>) => {
     const paletteItem = PALETTE_ITEMS.find((p) => p.type === type)
     const newWidget: WidgetLayout = {
-      id: `${type}-${nextWidgetId++}`,
+      id: `${type}-${crypto.randomUUID()}`,
       type,
       x: 0,
       y: workingLayout.length > 0 ? Math.max(...workingLayout.map((l) => l.y + l.h)) : 0,
@@ -70,6 +69,9 @@ export default function DashboardPage() {
   }
 
   const handleCancel = () => {
+    if (JSON.stringify(workingLayout) !== JSON.stringify(layout)) {
+      if (!window.confirm(t('customization.unsavedConfirm'))) return
+    }
     setEditing(false)
   }
 
@@ -91,6 +93,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-end gap-2">
+        {!editing && <PreferenceControls />}
         <Link to="/downloads">
           <Button variant="outline" size="sm">
             <PackageOpen className="h-4 w-4 mr-1" />
