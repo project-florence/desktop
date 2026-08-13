@@ -67,6 +67,17 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}
 
+      - name: Rename macOS bundles (unique per arch)
+        if: matrix.target != ''
+        run: |
+          set -e
+          for f in src-tauri/target/*/release/bundle/macos/Florence.app.tar.gz; do
+            if [ -f "$f" ]; then
+              mv "$f" "$(dirname "$f")/Florence-${matrix.target}.app.tar.gz"
+              echo "renamed to Florence-${matrix.target}.app.tar.gz"
+            fi
+          done
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
