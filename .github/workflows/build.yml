@@ -73,8 +73,8 @@ jobs:
           set -e
           for f in src-tauri/target/*/release/bundle/macos/Florence.app.tar.gz; do
             if [ -f "$f" ]; then
-              mv "$f" "$(dirname "$f")/Florence-${matrix.target}.app.tar.gz"
-              echo "renamed to Florence-${matrix.target}.app.tar.gz"
+              mv "$f" "$(dirname "$f")/Florence-${{ matrix.target }}.app.tar.gz"
+              echo "renamed to Florence-${{ matrix.target }}.app.tar.gz"
             fi
           done
 
