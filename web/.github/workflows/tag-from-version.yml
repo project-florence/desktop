@@ -42,10 +42,11 @@ jobs:
             echo "Tag ${TAG} atildi"
             # Garantili deploy + desktop sync: tag push'u bazi PAT scope'larinda
             # workflow tetiklemez; workflow_dispatch her zaman tetiklenir.
-            gh workflow run deploy --repo project-florence/web --ref "${TAG}" \
+            # GITHUB_TOKEN yerine PAT (SYNC_TOKEN): dispatch'te actions:write yetersiz.
+            GH_TOKEN="${SYNC_TOKEN}" gh workflow run deploy --repo project-florence/web --ref "${TAG}" \
               && echo "deploy workflow dispatch edildi (ref=${TAG})" \
               || echo "UYARI: deploy dispatch basarisiz"
-            gh workflow run sync-desktop --repo project-florence/web --ref main -f tag="${TAG}" \
+            GH_TOKEN="${SYNC_TOKEN}" gh workflow run sync-desktop --repo project-florence/web --ref main -f tag="${TAG}" \
               && echo "sync-desktop dispatch edildi (tag=${TAG})" \
               || echo "UYARI: sync-desktop dispatch basarisiz"
           fi
