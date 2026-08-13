@@ -148,6 +148,7 @@ export function HyperspaceBackground({
     const projMatrix = new Float32Array(16)
     let animId = 0
     let hidden = false
+    let contextLost = false
     const quality = createQualityTier()
     let speed = 1.5
     let stretch = 0
@@ -187,7 +188,23 @@ export function HyperspaceBackground({
     window.addEventListener('resize', resize)
     resize()
 
+    // WebGL context kaybi (GPU reset, surucu degisikligi vb.): sessizce dur,
+    // restore edilince loop'u yeniden baslat. preventDefault zorunludur —
+    // aksi halde tarayici context'i geri getirmez.
+    function onContextLost(e: Event) {
+      e.preventDefault()
+      contextLost = true
+      cancelAnimationFrame(animId)
+    }
+    function onContextRestored() {
+      contextLost = false
+      animId = requestAnimationFrame(render)
+    }
+    canvas.addEventListener('webglcontextlost', onContextLost)
+    canvas.addEventListener('webglcontextrestored', onContextRestored)
+
     function render() {
+      if (contextLost) return
       if (!hidden) quality.frame()
       if (hidden) { animId = requestAnimationFrame(render); return }
       // hyperdrive state machine
@@ -257,6 +274,8 @@ export function HyperspaceBackground({
       cancelAnimationFrame(animId)
       document.removeEventListener('visibilitychange', onVisibility)
       window.removeEventListener('resize', resize)
+      canvas.removeEventListener('webglcontextlost', onContextLost)
+      canvas.removeEventListener('webglcontextrestored', onContextRestored)
       mountedRef.current = false
     }
   }, [])

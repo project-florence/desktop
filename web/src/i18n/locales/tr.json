@@ -567,6 +567,7 @@
     "password": "Şifre (opsiyonel)",
     "passwordOptional": "Boş bırakılırsa şifre otomatik oluşturulur ve yalnızca bir kez gösterilir",
     "createSuccess": "Bot oluşturuldu",
+    "limitReached": "En fazla 5 bot oluşturabilirsiniz",
     "createError": "Bot oluşturulamadı",
     "deleteConfirm": "{{username}} botunu silmek istediğinize emin misiniz?",
     "deleted": "Bot silindi",

@@ -132,7 +132,7 @@ export function BotsSection() {
               onChange={(e) => setPassword(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">{t('bots.passwordOptional')}</p>
-            <Button variant="gradient" size="sm" disabled={!username.trim() || createMutation.isPending}>
+            <Button type="submit" variant="gradient" size="sm" disabled={!username.trim() || createMutation.isPending}>
               <Plus className="h-4 w-4 mr-1" />
               {t('bots.create')}
             </Button>
