@@ -12,7 +12,7 @@ export function Navbar() {
 
   return (
     <header className={cn(
-      'sticky z-30 h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-between px-4 md:px-6',
+      'sticky top-0 z-40 h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-between px-4 md:px-6',
       'pt-[env(safe-area-inset-top)]',
       isTauri() ? 'top-9' : 'top-0',
     )}>
