@@ -15,7 +15,8 @@
     "reports": "Raporlar",
     "metals": "Kıymetli Madenler",
     "profile": "Profil",
-    "logout": "Çıkış Yap"
+    "logout": "Çıkış Yap",
+    "marketData": "Piyasa Verisi"
   },
   "portfolio": {
     "title": "Portföy",
@@ -545,12 +546,8 @@
     "loginRequired": "Giriş yapmalısınız"
   },
   "market": {
-    "title": "Borsa Durumu",
     "open": "Açık",
-    "closed": "Kapalı",
-    "nextOpen": "Sonraki Açılış",
-    "timezone": "Saat Dilimi",
-    "holiday": "Tatil"
+    "closed": "Kapalı"
   },
   "contact": {
     "emailTitle": "E-posta",
@@ -576,7 +573,9 @@
     "passwordOneTime": "Bu şifre yalnızca bir kez gösterilir. Lütfen güvenli bir yerde saklayın.",
     "close": "Kapat",
     "copy": "Kopyala",
-    "copied": "Panoya kopyalandı"
+    "copied": "Panoya kopyalandı",
+    "passwordHint": "En az 10 karakter olmalı",
+    "passwordTooShort": "Şifre en az 10 karakter olmalı"
   },
   "advisorNote": "Analist Önerileri",
   "tooltip": {
@@ -593,29 +592,52 @@
     "platformWindows": "Windows",
     "platformMacos": "macOS",
     "platformLinux": "Linux",
-    "empty": "İndirilebilir sürümler henüz yayınlanmadı."
+    "empty": "İndirilebilir sürümler henüz yayınlanmadı.",
+    "description": "Masaüstü uygulamasını platformunuza uygun sürümle indirin.",
+    "platformWindowsDesc": "Windows için kurulum dosyası",
+    "platformMacosDesc": "macOS için disk imajı ve arşiv",
+    "platformLinuxDesc": "Linux için paketler",
+    "fileExe": "Windows (.exe)",
+    "fileMsi": "Windows (.msi)",
+    "fileDmg": "macOS (.dmg)",
+    "fileTarGz": "macOS (arşiv)",
+    "fileDeb": "Linux (Debian/Ubuntu)",
+    "fileRpm": "Linux (RPM)",
+    "fileAppImage": "Linux (AppImage)"
   },
   "exports": {
-    "title": "Veri Dışa Aktarımı",
+    "title": "Piyasa Verisi",
     "create": "Yeni Dışa Aktarım İsteği",
     "year": "Yıl",
     "format": "Format",
     "csv": "CSV",
     "json": "JSON",
-    "submit": "İstek Oluştur",
+    "submit": "E-posta ile Gönder",
     "created": "Oluşturulma",
-    "status": "Durum",
     "queued": "Hazırlanıyor",
     "processing": "Üretiliyor",
     "ready": "Hazır",
     "sent": "Gönderildi",
     "failed": "Başarısız",
-    "download": "İndir",
     "size": "Boyut",
     "rows": "Satır",
-    "downloads": "İndirme",
-    "requestReceived": "Export isteği alındı",
+    "requestReceived": "İsteğiniz alındı — hazırlanınca e-postanıza gönderilecek",
     "error": "Hata",
-    "empty": "Henüz dışa aktarım isteği oluşturmadınız"
+    "empty": "Henüz dışa aktarım isteği oluşturmadınız",
+    "pageDesc": "Yıllık piyasa verilerini e-posta ile alın",
+    "failedGeneric": "Başarısız — tekrar deneyin",
+    "readyNote": "Dosyanız e-posta ile gönderildi",
+    "pendingNote": "Hazırlanınca e-postanıza gönderilecek"
+  },
+  "page": {
+    "marketData": "Piyasa Verisi"
+  },
+  "marketStatus": {
+    "open": "AÇIK",
+    "closed": "KAPALI",
+    "holiday": "TATİL",
+    "nextOpen": "Sonraki Açılış",
+    "timezone": "Saat Dilimi",
+    "asOf": "Güncelleme"
   }
 }

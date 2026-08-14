@@ -40,6 +40,9 @@ export function BotsSection() {
   const [createdPassword, setCreatedPassword] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
+  // Backend min_length=10: boş bırakılırsa şifre otomatik üretilir, doldurulursa en az 10 karakter olmalı.
+  const passwordTooShort = password.length > 0 && password.length < 10
+
   const { data: bots, isLoading } = useQuery({
     queryKey: ['bots'],
     queryFn: async () => {
@@ -129,10 +132,12 @@ export function BotsSection() {
               type="password"
               placeholder={t('bots.password')}
               value={password}
+              minLength={10}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {passwordTooShort && <p className="text-xs text-destructive">{t('bots.passwordHint')}</p>}
             <p className="text-xs text-muted-foreground">{t('bots.passwordOptional')}</p>
-            <Button type="submit" variant="gradient" size="sm" disabled={!username.trim() || createMutation.isPending}>
+            <Button type="submit" variant="gradient" size="sm" disabled={!username.trim() || passwordTooShort || createMutation.isPending}>
               <Plus className="h-4 w-4 mr-1" />
               {t('bots.create')}
             </Button>

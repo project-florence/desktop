@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { LogOut, User, Key, Download, Trash2, ArrowLeft, Settings, Palette, Globe, Megaphone, Plus, Pencil, Trash, PackageOpen, Bot, FileDown } from 'lucide-react'
+import { LogOut, User, Key, Download, Trash2, ArrowLeft, Settings, Palette, Globe, Megaphone, Plus, Pencil, Trash, PackageOpen, Bot } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
@@ -24,7 +24,6 @@ import type { Profile, Announcement, AvatarMeta } from '@/types/api'
 import { CreditDisplay } from '@/components/shared/CreditDisplay'
 import { DownloadsContent } from '@/components/shared/DownloadsContent'
 import { BotsSection } from '@/components/shared/BotsSection'
-import { ExportsSection } from '@/components/shared/ExportsSection'
 
 export default function ProfilePage() {
   const { t, i18n } = useTranslation()
@@ -152,31 +151,31 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-5 max-w-3xl">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-4 w-4 mr-1" />
-          Geri
+          {t('common.back')}
         </Button>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-        <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5">
-          <CardContent className="p-5 flex items-center gap-4">
+      <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5">
+        <CardContent className="p-5">
+          <div className="flex items-start gap-4">
             {profile?.avatar_id ? (
               <img
                 src={resolveApiUrl(`/avatars/${profile.avatar_id}.svg`)}
                 alt={profile.username}
-                className="h-12 w-12 shrink-0 rounded-full object-cover"
+                className="h-20 w-20 shrink-0 rounded-full object-cover"
               />
             ) : (
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <User className="h-6 w-6 text-primary" />
+              <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <User className="h-9 w-9 text-primary" />
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <p className="text-lg font-bold">{profile?.username}</p>
-              <p className="text-sm text-muted-foreground">{profile?.email}</p>
+              <p className="text-xl font-bold truncate">{profile?.username}</p>
+              <p className="text-sm text-muted-foreground truncate">{profile?.email}</p>
               {profile?.created_at && (
                 <p className="text-xs text-muted-foreground/60 mt-0.5">
                   {t('profile.registered')}: {new Date(profile.created_at).toLocaleDateString()}
@@ -190,22 +189,19 @@ export default function ProfilePage() {
               )}>
                 {profile?.user_type === 'admin' ? t('profile.admin') : t('profile.user')}
               </span>
+              <div className="mt-3">
+                <Button variant="outline" size="sm" onClick={() => setAvatarDialogOpen(true)}>
+                  <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                  {t('profile.avatar.change')}
+                </Button>
+              </div>
             </div>
-            <Button variant="outline" size="sm" className="shrink-0" onClick={() => setAvatarDialogOpen(true)}>
-              <Pencil className="h-3.5 w-3.5 mr-1.5" />
-              {t('profile.avatar.change')}
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/5">
-          <CardContent className="p-5">
-            <CreditDisplay size="lg" />
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Tabs defaultValue="account">
-        <TabsList className="w-full">
+        <TabsList className="w-full flex-wrap">
           <TabsTrigger value="account" className="flex-1">
             <User className="h-4 w-4 mr-2" />
             {t('profile.account')}
@@ -229,10 +225,6 @@ export default function ProfilePage() {
           <TabsTrigger value="bots" className="flex-1">
             <Bot className="h-4 w-4 mr-2" />
             {t('profile.bots')}
-          </TabsTrigger>
-          <TabsTrigger value="exports" className="flex-1">
-            <FileDown className="h-4 w-4 mr-2" />
-            {t('exports.title')}
           </TabsTrigger>
           {profile?.user_type === 'admin' && (
             <TabsTrigger value="admin" className="flex-1">
@@ -491,15 +483,18 @@ export default function ProfilePage() {
         <TabsContent value="bots" className="mt-4">
           <BotsSection />
         </TabsContent>
-        <TabsContent value="exports" className="mt-4">
-          <ExportsSection />
-        </TabsContent>
         {profile?.user_type === 'admin' && (
           <TabsContent value="admin" className="mt-4 space-y-4">
             <AdminAnnouncements />
           </TabsContent>
         )}
       </Tabs>
+
+      <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/5">
+        <CardContent className="p-5">
+          <CreditDisplay size="lg" />
+        </CardContent>
+      </Card>
 
       <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
         <DialogContent className="max-h-[min(85dvh,560px)] overflow-y-auto sm:max-w-md">
