@@ -31,7 +31,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <DashboardGrid layout={layout} editing={false} />
     </div>
   )

@@ -633,9 +633,10 @@
     "marketData": "Piyasa Verisi"
   },
   "marketStatus": {
-    "open": "AÇIK",
-    "closed": "KAPALI",
-    "holiday": "TATİL",
+    "open": "Borsa Açık",
+    "closed": "Borsa Kapalı",
+    "holiday": "Borsa Kapalı (Tatil)",
+    "holidayWithName": "Borsa Kapalı (Tatil: {{name}})",
     "nextOpen": "Sonraki Açılış",
     "timezone": "Saat Dilimi",
     "asOf": "Güncelleme"
