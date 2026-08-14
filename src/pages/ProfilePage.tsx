@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { LogOut, User, Key, Download, Trash2, ArrowLeft, Settings, Palette, Globe, Megaphone, Plus, Pencil, Trash, PackageOpen, Bot } from 'lucide-react'
+import { LogOut, User, Key, Download, Trash2, ArrowLeft, Settings, Palette, Globe, Megaphone, Plus, Pencil, Trash, PackageOpen, Bot, FileDown } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
@@ -24,6 +24,7 @@ import type { Profile, Announcement, AvatarMeta } from '@/types/api'
 import { CreditDisplay } from '@/components/shared/CreditDisplay'
 import { DownloadsContent } from '@/components/shared/DownloadsContent'
 import { BotsSection } from '@/components/shared/BotsSection'
+import { ExportsSection } from '@/components/shared/ExportsSection'
 
 export default function ProfilePage() {
   const { t, i18n } = useTranslation()
@@ -228,6 +229,10 @@ export default function ProfilePage() {
           <TabsTrigger value="bots" className="flex-1">
             <Bot className="h-4 w-4 mr-2" />
             {t('profile.bots')}
+          </TabsTrigger>
+          <TabsTrigger value="exports" className="flex-1">
+            <FileDown className="h-4 w-4 mr-2" />
+            {t('exports.title')}
           </TabsTrigger>
           {profile?.user_type === 'admin' && (
             <TabsTrigger value="admin" className="flex-1">
@@ -485,6 +490,9 @@ export default function ProfilePage() {
         </TabsContent>
         <TabsContent value="bots" className="mt-4">
           <BotsSection />
+        </TabsContent>
+        <TabsContent value="exports" className="mt-4">
+          <ExportsSection />
         </TabsContent>
         {profile?.user_type === 'admin' && (
           <TabsContent value="admin" className="mt-4 space-y-4">

@@ -594,5 +594,28 @@
     "platformMacos": "macOS",
     "platformLinux": "Linux",
     "empty": "İndirilebilir sürümler henüz yayınlanmadı."
+  },
+  "exports": {
+    "title": "Veri Dışa Aktarımı",
+    "create": "Yeni Dışa Aktarım İsteği",
+    "year": "Yıl",
+    "format": "Format",
+    "csv": "CSV",
+    "json": "JSON",
+    "submit": "İstek Oluştur",
+    "created": "Oluşturulma",
+    "status": "Durum",
+    "queued": "Hazırlanıyor",
+    "processing": "Üretiliyor",
+    "ready": "Hazır",
+    "sent": "Gönderildi",
+    "failed": "Başarısız",
+    "download": "İndir",
+    "size": "Boyut",
+    "rows": "Satır",
+    "downloads": "İndirme",
+    "requestReceived": "Export isteği alındı",
+    "error": "Hata",
+    "empty": "Henüz dışa aktarım isteği oluşturmadınız"
   }
 }

@@ -461,3 +461,27 @@ export interface UpdateUsernamePayload {
   new_username: string
   current_password: string
 }
+
+export type ExportStatus = 'queued' | 'processing' | 'ready' | 'sent' | 'failed'
+
+export interface ExportRecord {
+  id: number | string
+  year: number
+  format: string
+  status: ExportStatus
+  created_at: string
+  row_count?: number | null
+  size_bytes?: number | null
+  downloaded_count?: number | null
+  expires_at?: string | null
+  downloadable?: boolean
+  /** İndirme linki token ile üretilir; backend şemasına göre token veya download_url gelebilir. */
+  token?: string | null
+  download_url?: string | null
+  error?: string | null
+}
+
+export interface ExportCreateResponse {
+  export_id: number | string
+  status: ExportStatus
+}

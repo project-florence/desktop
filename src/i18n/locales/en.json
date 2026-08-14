@@ -594,5 +594,28 @@
     "platformMacos": "macOS",
     "platformLinux": "Linux",
     "empty": "No releases available yet."
+  },
+  "exports": {
+    "title": "Data Export",
+    "create": "New Export Request",
+    "year": "Year",
+    "format": "Format",
+    "csv": "CSV",
+    "json": "JSON",
+    "submit": "Create Request",
+    "created": "Created",
+    "status": "Status",
+    "queued": "Queued",
+    "processing": "Processing",
+    "ready": "Ready",
+    "sent": "Sent",
+    "failed": "Failed",
+    "download": "Download",
+    "size": "Size",
+    "rows": "Rows",
+    "downloads": "Downloads",
+    "requestReceived": "Export request received",
+    "error": "Error",
+    "empty": "You haven't created any export requests yet"
   }
 }
