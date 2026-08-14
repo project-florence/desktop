@@ -15,7 +15,8 @@
     "reports": "Reports",
     "metals": "Precious Metals",
     "profile": "Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "marketData": "Market Data"
   },
   "portfolio": {
     "title": "Portfolio",
@@ -545,12 +546,8 @@
     "loginRequired": "You must log in first"
   },
   "market": {
-    "title": "Market Status",
     "open": "Open",
-    "closed": "Closed",
-    "nextOpen": "Next Open",
-    "timezone": "Timezone",
-    "holiday": "Holiday"
+    "closed": "Closed"
   },
   "contact": {
     "emailTitle": "Email",
@@ -576,7 +573,9 @@
     "passwordOneTime": "This password is shown only once. Please store it somewhere safe.",
     "close": "Close",
     "copy": "Copy",
-    "copied": "Copied to clipboard"
+    "copied": "Copied to clipboard",
+    "passwordHint": "Must be at least 10 characters",
+    "passwordTooShort": "Password must be at least 10 characters"
   },
   "advisorNote": "Analyst Recommendations",
   "tooltip": {
@@ -593,29 +592,52 @@
     "platformWindows": "Windows",
     "platformMacos": "macOS",
     "platformLinux": "Linux",
-    "empty": "No releases available yet."
+    "empty": "No releases available yet.",
+    "description": "Download the desktop app for your platform.",
+    "platformWindowsDesc": "Installer for Windows",
+    "platformMacosDesc": "Disk image and archive for macOS",
+    "platformLinuxDesc": "Packages for Linux",
+    "fileExe": "Windows (.exe)",
+    "fileMsi": "Windows (.msi)",
+    "fileDmg": "macOS (.dmg)",
+    "fileTarGz": "macOS (archive)",
+    "fileDeb": "Linux (Debian/Ubuntu)",
+    "fileRpm": "Linux (RPM)",
+    "fileAppImage": "Linux (AppImage)"
   },
   "exports": {
-    "title": "Data Export",
+    "title": "Market Data",
     "create": "New Export Request",
     "year": "Year",
     "format": "Format",
     "csv": "CSV",
     "json": "JSON",
-    "submit": "Create Request",
+    "submit": "Send via Email",
     "created": "Created",
-    "status": "Status",
     "queued": "Queued",
     "processing": "Processing",
     "ready": "Ready",
     "sent": "Sent",
     "failed": "Failed",
-    "download": "Download",
     "size": "Size",
     "rows": "Rows",
-    "downloads": "Downloads",
-    "requestReceived": "Export request received",
+    "requestReceived": "Request received — will be emailed once ready",
     "error": "Error",
-    "empty": "You haven't created any export requests yet"
+    "empty": "You haven't created any export requests yet",
+    "pageDesc": "Receive yearly market data via email",
+    "failedGeneric": "Failed — please try again",
+    "readyNote": "Your file has been emailed to you",
+    "pendingNote": "Will be emailed once ready"
+  },
+  "page": {
+    "marketData": "Market Data"
+  },
+  "marketStatus": {
+    "open": "OPEN",
+    "closed": "CLOSED",
+    "holiday": "HOLIDAY",
+    "nextOpen": "Next Open",
+    "timezone": "Timezone",
+    "asOf": "As of"
   }
 }

@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { Download, FileDown, Plus } from 'lucide-react'
+import { FileDown, Plus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,11 +25,18 @@ const STATUS_META: Record<
   failed: { label: 'exports.failed', variant: 'destructive' },
 }
 
-/** Backend şemasına göre token veya download_url alanından indirme linkini çözer. */
-function resolveDownloadUrl(record: ExportRecord): string | null {
-  if (record.download_url) return record.download_url
-  if (record.token) return `/api/v1/data/export/download/${record.token}`
-  return null
+const NOTIFIED_KEY = 'florence.export.notified'
+
+/** "Dosyanız gönderildi" toast'ının her kayıt için yalnızca bir kez gösterilmesini sağlar. */
+function loadNotified(): Set<string> {
+  try {
+    const raw = localStorage.getItem(NOTIFIED_KEY)
+    if (!raw) return new Set()
+    const parsed: unknown = JSON.parse(raw)
+    return new Set(Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === 'string') : [])
+  } catch {
+    return new Set()
+  }
 }
 
 export function ExportsSection() {
@@ -52,6 +59,39 @@ export function ExportsSection() {
       return active ? 10_000 : 0
     },
   })
+
+  // Sent'e geçişte tek seferlik bildirim; queued/processing geçişleri sessizdir.
+  const prevStatuses = useRef<Record<string, ExportStatus> | null>(null)
+  const notified = useRef<Set<string>>(loadNotified())
+  useEffect(() => {
+    if (!records) return
+    const prev = prevStatuses.current
+    prevStatuses.current = Object.fromEntries(records.map((r) => [String(r.id), r.status]))
+    for (const record of records) {
+      const id = String(record.id)
+      if (record.status === 'sent' && prev && prev[id] !== 'sent' && !notified.current.has(id)) {
+        notified.current.add(id)
+        try {
+          localStorage.setItem(NOTIFIED_KEY, JSON.stringify([...notified.current]))
+        } catch {
+          // localStorage dolu/erişilemezse sessizce geç
+        }
+        toast.success(t('exports.readyNote'))
+      }
+    }
+  }, [records, t])
+
+  // Teknik hata detayı yalnızca konsola; UI'da asla gösterilmez.
+  const failedLogged = useRef<Set<string>>(new Set())
+  useEffect(() => {
+    for (const record of records ?? []) {
+      const id = String(record.id)
+      if (record.status === 'failed' && record.error && !failedLogged.current.has(id)) {
+        failedLogged.current.add(id)
+        console.error('Export failed:', id, record.error)
+      }
+    }
+  }, [records])
 
   const createMutation = useMutation({
     mutationFn: () => createExport(yearNum, format),
@@ -133,10 +173,12 @@ export function ExportsSection() {
             <div className="space-y-2">
               {records.map((record) => {
                 const status = STATUS_META[record.status] ?? STATUS_META.failed
-                const resolvedUrl = resolveDownloadUrl(record)
-                // Tolerans: downloadable alanı gelmezse bile URL çözülebiliyorsa butonu göster;
-                // yalnızca açıkça false ise gizle.
-                const downloadHref = record.downloadable !== false ? resolvedUrl : null
+                const noteKey =
+                  record.status === 'ready' || record.status === 'sent'
+                    ? 'exports.readyNote'
+                    : record.status === 'queued' || record.status === 'processing'
+                      ? 'exports.pendingNote'
+                      : null
                 return (
                   <div key={String(record.id)} className="rounded-lg border border-border/40 px-4 py-3">
                     <div className="flex items-center justify-between gap-3">
@@ -152,18 +194,8 @@ export function ExportsSection() {
                           })}
                         </span>
                       </div>
-                      {downloadHref && (
-                        <a
-                          href={downloadHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="shrink-0"
-                        >
-                          <Button variant="outline" size="sm">
-                            <Download className="h-3.5 w-3.5 mr-1.5" />
-                            {t('exports.download')}
-                          </Button>
-                        </a>
+                      {noteKey && (
+                        <span className="text-xs text-muted-foreground shrink-0 text-right">{t(noteKey)}</span>
                       )}
                     </div>
                     <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
@@ -177,14 +209,9 @@ export function ExportsSection() {
                           {t('exports.rows')}: {record.row_count.toLocaleString(i18n.language)}
                         </span>
                       )}
-                      {record.downloaded_count != null && (
-                        <span>
-                          {t('exports.downloads')}: {record.downloaded_count.toLocaleString(i18n.language)}
-                        </span>
-                      )}
                     </div>
-                    {record.status === 'failed' && record.error && (
-                      <p className="mt-2 text-xs text-destructive">{record.error}</p>
+                    {record.status === 'failed' && (
+                      <p className="mt-2 text-xs text-destructive">{t('exports.failedGeneric')}</p>
                     )}
                   </div>
                 )

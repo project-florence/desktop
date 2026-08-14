@@ -11,6 +11,7 @@ import {
   Rocket,
   DollarSign,
   Gem,
+  Database,
   User,
   PanelLeftClose,
   PanelLeft,
@@ -35,6 +36,7 @@ const navItems = [
   { to: '/ipos', icon: Rocket, labelKey: 'nav.ipos', activeCheck: (p: string) => p === '/ipos' },
   { to: '/currency', icon: DollarSign, labelKey: 'nav.currency', activeCheck: (p: string) => p === '/currency' },
   { to: '/metals', icon: Gem, labelKey: 'nav.metals', activeCheck: (p: string) => p === '/metals' },
+  { to: '/data', icon: Database, labelKey: 'nav.marketData', activeCheck: (p: string) => p === '/data' },
 ]
 
 export function Sidebar() {
