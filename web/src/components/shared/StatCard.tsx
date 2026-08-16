@@ -33,16 +33,23 @@ export function StatCard({ title, value, change, loading, sub, positive }: StatC
             {loading ? (
               <Skeleton className="h-7 w-24" />
             ) : (
-              <p className="text-2xl font-bold">{value || '—'}</p>
+              <p className="text-2xl font-bold">{value ?? '—'}</p>
             )}
-            {change !== undefined && change !== null && (
-              <div className={cn(
-                'flex items-center gap-1 mt-1 text-xs font-semibold',
-                change >= 0 ? 'text-success' : 'text-destructive',
-              )}>
-                {change >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                {change >= 0 ? '+' : ''}{change.toFixed(2)}%
-              </div>
+            {change !== undefined && (
+              change !== null ? (
+                <div className={cn(
+                  'flex items-center gap-1 mt-1 text-xs font-semibold',
+                  change >= 0 ? 'text-success' : 'text-destructive',
+                )}>
+                  {change >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                  {change >= 0 ? '+' : ''}{change.toFixed(2)}%
+                </div>
+              ) : (
+                // Backend yönergesi: Change null ise "—" göster (0.00 asla üretilmez).
+                <div className="flex items-center gap-1 mt-1 text-xs font-semibold text-muted-foreground">
+                  —
+                </div>
+              )
             )}
           </CardContent>
         </>

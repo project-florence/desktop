@@ -1,16 +1,20 @@
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { TrendingUp, TrendingDown, Gem } from 'lucide-react'
 import { parseChange } from '@/lib/parse'
 import { PortfolioBuySell } from '@/components/shared/PortfolioBuySell'
-import { isEconomyEmpty } from '@/lib/economy'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { usePageTitle } from '@/hooks/usePageTitle'
-import api from '@/lib/api'
-import type { RateEntry } from '@/types/api'
+import { useEconomyQuotes } from '@/hooks/useEconomyQuotes'
+import { CANONICAL_TO_LEGACY, currencySymbol, unitLabel } from '@/lib/economy'
+import { EconomyChartPanel, type EconomySymbolOption } from '@/components/economy/EconomyChartPanel'
+import { AnalysisPanel } from '@/components/economy/AnalysisPanel'
+import { RecordsPanel } from '@/components/economy/RecordsPanel'
+import { ProvidersPanel } from '@/components/economy/ProvidersPanel'
+import type { Quote } from '@/types/api'
 
 const METAL_KEYS: Record<string, string> = {
   ons: 'goldOz',
@@ -35,9 +39,32 @@ const METAL_KEYS: Record<string, string> = {
   'gram-paladyum': 'palladium',
 }
 
-function MetalCard({ id, entry, index = 0 }: { id: string; entry: RateEntry; index?: number }) {
+// Kanonik sıralama (backend `_GOLD_CANONICAL` aynası) — altın grid düzenini korur.
+const GOLD_CANONICAL_ORDER = [
+  'XAU-ONS', 'XAU-GRAM', 'XAU-HAS', 'XAU-CEYREK', 'XAU-YARIM', 'XAU-TAM',
+  'XAU-CUMHURIYET', 'XAU-ATA', 'XAU-14-AYAR', 'XAU-18-AYAR', 'XAU-22-BILEZIK',
+  'XAU-IKIBUCUK', 'XAU-BESLI', 'XAU-GREMSE', 'XAU-RESAT', 'XAU-HAMIT',
+]
+
+const OTHER_METAL_CANONICAL = ['XAG-GRAM', 'XPT-GRAM', 'XPD-GRAM']
+
+function PriceText({ value, entry }: { value: number | null | undefined; entry: Quote }) {
   const { t } = useTranslation()
-  const change = parseChange(entry.Change)
+  const unit = unitLabel(entry.unit)
+  const unitText = unit === 'gram' ? t('economy.unitGram') : unit === 'ounce' ? t('economy.unitOunce') : ''
+  if (value === null || value === undefined) return <span>—</span>
+  return (
+    <span>
+      {currencySymbol(entry.currency)}
+      {value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+      {unitText ? ` ${unitText}` : ''}
+    </span>
+  )
+}
+
+function MetalCard({ id, entry, index = 0 }: { id: string; entry: Quote; index?: number }) {
+  const { t } = useTranslation()
+  const change = parseChange(entry.change_pct)
   return (
     <div className="animate-slideUp" style={{ animationDelay: `${(index % 12) * 60}ms` }}>
       <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5 h-full">
@@ -45,18 +72,27 @@ function MetalCard({ id, entry, index = 0 }: { id: string; entry: RateEntry; ind
         <div className="flex items-center gap-2 mb-2">
           <span className="text-lg">{id.includes('altin') || id === 'ons' ? '🥇' : '🥈'}</span>
           <span className="font-medium text-sm">{t(`metals.${METAL_KEYS[id]}`) || id}</span>
+          {entry.stale && (
+            <Badge variant="outline" className="h-4 px-1 text-[9px] text-amber-600">
+              {t('economy.stale')}
+            </Badge>
+          )}
         </div>
         <div className="space-y-1 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">{t('currency.buy')}</span>
-            <span className="font-medium">{entry.Buying}</span>
+            <span className="font-medium tabular-nums">
+              <PriceText value={entry.buying ?? entry.price} entry={entry} />
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">{t('currency.sell')}</span>
-            <span className="font-medium">{entry.Selling}</span>
+            <span className="font-medium tabular-nums">
+              <PriceText value={entry.selling} entry={entry} />
+            </span>
           </div>
         </div>
-        {change !== null && (
+        {change !== null ? (
           <div className={cn(
             'flex items-center gap-1 mt-2 text-xs font-semibold',
             change >= 0 ? 'text-success' : 'text-destructive',
@@ -64,6 +100,9 @@ function MetalCard({ id, entry, index = 0 }: { id: string; entry: RateEntry; ind
             {change >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
             {change >= 0 ? '+' : ''}{change.toFixed(2)}%
           </div>
+        ) : (
+          // Backend yönergesi: Change null ise "—" göster (0.00 asla üretilmez).
+          <div className="flex items-center gap-1 mt-2 text-xs font-semibold text-muted-foreground">—</div>
         )}
         <div className="mt-2">
           <PortfolioBuySell ticker={id} variant="compact" />
@@ -78,87 +117,87 @@ export default function MetalsPage() {
   const { t } = useTranslation()
   usePageTitle(t('nav.metals'))
 
-  const { data: gold, isLoading: goldLoading, isError: goldError, refetch: refetchGold } = useQuery({
-    queryKey: ['gold-all'],
-    queryFn: async () => {
-      const res = await api.get('/api/v1/economy/gold-prices')
-      return res.data as Record<string, RateEntry>
-    },
-    staleTime: 60_000,
-  })
+  // Tek kanonik istek: legacy gold-prices + silver + platin + paladyum çağrılarının yerine.
+  const { data: bundle, isLoading, isError, refetch } = useEconomyQuotes('metal')
+  const quotes = bundle?.quotes ?? {}
+  const quotesEmpty = !bundle || Object.keys(quotes).length === 0
 
-  const { data: silver } = useQuery({
-    queryKey: ['silver'],
-    queryFn: async () => {
-      const res = await api.get('/api/v1/economy/silver-price')
-      return res.data as Record<string, RateEntry>
-    },
-    staleTime: 60_000,
-  })
+  const goldPairs = GOLD_CANONICAL_ORDER
+    .filter((sym) => quotes[sym] && CANONICAL_TO_LEGACY[sym])
+    .map((sym) => [CANONICAL_TO_LEGACY[sym], sym] as const)
 
-  const { data: platinum } = useQuery({
-    queryKey: ['platinum'],
-    queryFn: async () => {
-      const res = await api.get('/api/v1/economy/gram-platinum-price')
-      return res.data as Record<string, RateEntry>
-    },
-    staleTime: 60_000,
-  })
+  const otherPairs = OTHER_METAL_CANONICAL
+    .filter((sym) => quotes[sym] && CANONICAL_TO_LEGACY[sym])
+    .map((sym) => [CANONICAL_TO_LEGACY[sym], sym] as const)
 
-  const { data: palladium } = useQuery({
-    queryKey: ['palladium'],
-    queryFn: async () => {
-      const res = await api.get('/api/v1/economy/gram-palladium-price')
-      return res.data as Record<string, RateEntry>
-    },
-    staleTime: 60_000,
-  })
-
-  const otherMetals = {
-    ...(silver || {}),
-    ...(platinum || {}),
-    ...(palladium || {}),
-  }
+  const chartSymbols: EconomySymbolOption[] = [
+    { value: 'XAU-ONS', label: t('metals.goldOz') },
+    { value: 'XAU-GRAM', label: t('metals.goldGram') },
+    { value: 'XAU-CEYREK', label: t('metals.goldQuarter') },
+    { value: 'XAU-YARIM', label: t('metals.goldHalf') },
+    { value: 'XAU-TAM', label: t('metals.goldFull') },
+    { value: 'XAU-CUMHURIYET', label: t('metals.goldRepublic') },
+    { value: 'XAU-ATA', label: t('metals.goldAta') },
+    { value: 'XAU-14-AYAR', label: t('metals.gold14k') },
+    { value: 'XAU-18-AYAR', label: t('metals.gold18k') },
+    { value: 'XAU-22-BILEZIK', label: t('metals.gold22k') },
+    { value: 'XAG-ONS', label: `${t('metals.silver')} (ons)` },
+    { value: 'XAG-GRAM', label: t('metals.silver') },
+    { value: 'XPT-ONS', label: `${t('metals.platinum')} (ons)` },
+    { value: 'XPT-GRAM', label: t('metals.platinum') },
+    { value: 'XPD-ONS', label: `${t('metals.palladium')} (ons)` },
+    { value: 'XPD-GRAM', label: t('metals.palladium') },
+  ]
 
   return (
     <div className="space-y-6">
-      {goldLoading ? (
+      {isLoading ? (
         <div className="grid gap-4 items-stretch grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {Array.from({ length: 8 }).map((_, i) => (
             <Card key={i}><CardContent className="p-4"><Skeleton className="h-24 w-full" /></CardContent></Card>
           ))}
         </div>
-      ) : goldError || isEconomyEmpty(gold as Record<string, unknown>) ? (
+      ) : isError || quotesEmpty ? (
         <Card>
           <CardContent className="p-8 text-center space-y-3">
             <p className="text-sm text-destructive">Kıymetli maden verisi alınamadı. Veri sağlayıcıya ulaşılamıyor olabilir.</p>
-            <Button variant="outline" size="sm" onClick={() => refetchGold()}>Tekrar dene</Button>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>Tekrar dene</Button>
           </CardContent>
         </Card>
       ) : (
         <>
-          {gold && (
+          <p className="text-xs text-muted-foreground">
+            {t('economy.source')}: {bundle?.source ?? '—'} · {t('economy.updatedAt')}:{' '}
+            {bundle?.ts ? new Date(bundle.ts).toLocaleString('tr-TR') : '—'}
+          </p>
+          {goldPairs.length > 0 && (
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
                 <Gem className="h-4 w-4" /> Altın
               </h3>
               <div className="grid gap-4 items-stretch grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                {Object.entries(gold).map(([id, entry], i) => (
-                  <MetalCard key={id} id={id} entry={entry} index={i} />
+                {goldPairs.map(([id, sym], i) => (
+                  <MetalCard key={id} id={id} entry={quotes[sym]} index={i} />
                 ))}
               </div>
             </div>
           )}
-          {Object.keys(otherMetals).length > 0 && (
+          {otherPairs.length > 0 && (
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">Diğer Değerli Metaller</h3>
               <div className="grid gap-4 items-stretch grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {Object.entries(otherMetals).map(([id, entry], i) => (
-                  <MetalCard key={id} id={id} entry={entry} index={i + 14} />
+                {otherPairs.map(([id, sym], i) => (
+                  <MetalCard key={id} id={id} entry={quotes[sym]} index={i + 14} />
                 ))}
               </div>
             </div>
           )}
+          <div className="grid gap-6 lg:grid-cols-2 items-start">
+            <EconomyChartPanel symbols={chartSymbols} defaultSymbol="XAU-GRAM" />
+            <AnalysisPanel symbols={chartSymbols} defaultSymbol="XAU-GRAM" />
+          </div>
+          <RecordsPanel symbols={[...GOLD_CANONICAL_ORDER, ...OTHER_METAL_CANONICAL]} />
+          <ProvidersPanel />
         </>
       )}
     </div>

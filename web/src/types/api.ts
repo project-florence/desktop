@@ -5,10 +5,98 @@ export interface UserPreferences {
 }
 
 export interface RateEntry {
-  Buying: string
-  Selling: string
+  Buying: number
+  Selling: number
+  Change: number | null
   Type: string
-  Change: string | null
+  /** Sayısal değişim alias'ı (backend 0.6.0 plan 8.3). */
+  change_pct?: number | null
+  /** Opsiyonel görüntü ipucu (örn. "%+1.23") — yetkili alan daima sayısal. */
+  change_text?: string | null
+  currency?: string
+  unit?: string
+  source?: string | null
+  ts?: string | null
+  /** DB snapshot fallback'inden servis edildiğinde true. */
+  stale?: boolean
+}
+
+/** Kanonik quotes yanıtındaki tek sembol (GET /api/v1/economy/quotes). */
+export interface Quote {
+  symbol: string
+  buying: number | null
+  selling: number | null
+  price?: number | null
+  change_pct: number | null
+  change_text?: string | null
+  currency: string
+  unit: string
+  source: string | null
+  ts: string | null
+  stale: boolean
+}
+
+/** GET /api/v1/economy/quotes yanıtı — toplama zamanı, kazanan kaynak, semboller. */
+export interface QuoteBundle {
+  ts: string
+  source: string | null
+  quotes: Record<string, Quote>
+  remaining?: number | null
+}
+
+/** GET /api/v1/economy/history/{symbol} mumu (PriceHistory ile yapısal uyumlu). */
+export interface EconomyCandle {
+  symbol: string
+  interval: string
+  ts: string
+  open: number
+  high: number
+  low: number
+  close: number
+  volume: number | null
+}
+
+/** GET /api/v1/economy/analysis/{symbol} — ön hesaplanmış teknik metrikler. */
+export interface EconomyAnalysis {
+  symbol: string
+  computed_at: string
+  sma_5: number | null
+  sma_20: number | null
+  sma_50: number | null
+  sma_200: number | null
+  price_vs_sma_20: number | null
+  rsi_14: number | null
+  volatility_20d: number | null
+  change_daily_pct: number | null
+  change_week_pct: number | null
+  change_month_pct: number | null
+  high_52w: number | null
+  low_52w: number | null
+  all_time_high: number | null
+  all_time_low: number | null
+  rank_in_52w: number | null
+  correlations?: Record<string, number>
+}
+
+/** GET /api/v1/economy/records — tek sembolün rekor özeti. */
+export interface EconomyRecord {
+  symbol: string
+  all_time_high: number | null
+  all_time_low: number | null
+  high_52w: number | null
+  low_52w: number | null
+  rank_in_52w: number | null
+  last_close: number | null
+}
+
+/** GET /api/v1/economy/providers — kaynak sağlık satırı. */
+export interface EconomyProviderStatus {
+  provider: string
+  last_success: string | null
+  last_error: string | null
+  consecutive_failures: number
+  circuit_open: boolean
+  last_error_msg: string | null
 }
 
 export interface UserRegister {

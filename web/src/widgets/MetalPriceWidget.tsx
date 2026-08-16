@@ -1,36 +1,28 @@
-import { useQuery } from '@tanstack/react-query'
 import { StatCard } from '@/components/shared/StatCard'
-import { parsePrice, parseChange } from '@/lib/parse'
-import api from '@/lib/api'
-import type { RateEntry } from '@/types/api'
+import { useEconomyQuotes } from '@/hooks/useEconomyQuotes'
+import { currencySymbol, toCanonicalSymbol } from '@/lib/economy'
+
+const METAL_NAMES: Record<string, string> = {
+  'gram-altin': 'Gram Altın',
+  gumus: 'Gümüş',
+  ons: 'Ons Altın',
+  'ceyrek-altin': 'Çeyrek Altın',
+}
 
 export default function MetalPriceWidget({ config }: { config?: Record<string, unknown> }) {
   const metal = (config?.metal as string) || 'gram-altin'
+  const canonical = toCanonicalSymbol(metal)
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['gold'],
-    queryFn: async () => {
-      const res = await api.get('/api/v1/economy/gold-prices')
-      return res.data as Record<string, RateEntry>
-    },
-    staleTime: 60_000,
-  })
+  const { data, isLoading } = useEconomyQuotes('metal')
 
-  const entry = data?.[metal]
-  const price = entry ? parsePrice(entry.Buying) : null
-  const change = entry ? parseChange(entry.Change) : null
-
-  const metalNames: Record<string, string> = {
-    'gram-altin': 'Gram Altın',
-    'gumus': 'Gümüş',
-    'ons': 'Ons Altın',
-    'ceyrek-altin': 'Çeyrek Altın',
-  }
+  const quote = data?.quotes[canonical]
+  const price = quote?.buying ?? quote?.price ?? null
+  const change = quote?.change_pct ?? null
 
   return (
     <StatCard
-      title={metalNames[metal] || metal}
-      value={price ? `₺${price.toLocaleString('tr-TR')}` : undefined}
+      title={METAL_NAMES[metal] || metal}
+      value={price != null ? `${currencySymbol(quote?.currency)}${price.toLocaleString('tr-TR')}` : undefined}
       change={change}
       loading={isLoading}
     />
