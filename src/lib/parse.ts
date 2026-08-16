@@ -1,6 +1,17 @@
-export function parsePrice(s: string | undefined): number | null {
-  if (!s) return null
-  let cleaned = s.replace(/[^0-9.,-]/g, '')
+/**
+ * Backend 0.6.0+ ekonomi yanıtları sayısal (float) döndürür; geçiş döneminde
+ * Redis fallback'i virgüllü string üretebilir. Bu yardımcılar her iki formu da
+ * kabul eder: `number` olduğu gibi döndürülür (asla `.replace()` çağrılmaz —
+ * TypeError riski), string ise eski virgül/nokta temizleme mantığı uygulanır.
+ */
+
+export function parsePrice(s: number | string | null | undefined): number | null {
+  if (s === null || s === undefined) return null
+  if (typeof s === 'number') return Number.isFinite(s) ? s : null
+  if (typeof s !== 'string') return null
+  const trimmed = s.trim()
+  if (!trimmed) return null
+  let cleaned = trimmed.replace(/[^0-9.,-]/g, '')
   if (cleaned.includes(',') && cleaned.includes('.')) {
     // Türkçe "1.234,56" ya da uluslararası "1,234.56" — son ayırıcı ondalık.
     if (cleaned.lastIndexOf(',') > cleaned.lastIndexOf('.')) {
@@ -15,9 +26,12 @@ export function parsePrice(s: string | undefined): number | null {
   return isNaN(n) ? null : n
 }
 
-export function parseChange(s: string | null | undefined): number | null {
-  if (!s) return null
-  const cleaned = s.replace('%', '').replace(',', '.')
+export function parseChange(s: number | string | null | undefined): number | null {
+  if (s === null || s === undefined) return null
+  if (typeof s === 'number') return Number.isFinite(s) ? s : null
+  if (typeof s !== 'string') return null
+  const cleaned = s.replace('%', '').replace(',', '.').trim()
+  if (!cleaned) return null
   const n = parseFloat(cleaned)
   return isNaN(n) ? null : n
 }
