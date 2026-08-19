@@ -1,7 +1,7 @@
+[English version](./README-en.md)
+
 <p align="center">
-  <picture>
-    <img src="./src/assets/florence_logo.svg" width="80" height="80" alt="Florence">
-  </picture>
+  <img src="./src/assets/florence_logo.svg" width="80" height="80" alt="Florence">
 </p>
 
 <h1 align="center">Florence</h1>
@@ -10,33 +10,42 @@
   <strong>Akıllı Yatırım Asistanı</strong> — Gerçek zamanlı piyasa verileri, yapay zekâ destekli analizler ve sanal portföy yönetimi.
 </p>
 
-<p align="center">
-  <img src="./public/assets/stocks.png" width="700" alt="Florence ekran görüntüsü">
-</p>
-
 ---
 
-Florence; hisse senetleri, döviz kurları, kıymetli metaller ve makroekonomik göstergeleri tek bir ekranda takip edebileceğiniz akıllı bir yatırım asistanıdır. Gerçek zamanlı piyasa verilerini yapay zekâ destekli analizlerle birleştirir; simülasyonlar yapmanıza, otomatik raporlar üretmenize ve sanal portföylerinizi yönetmenize olanak tanır.
+Florence; hisse senetleri, döviz kurları, kıymetli metaller ve makroekonomik göstergeleri tek bir ekranda takip edebileceğiniz akıllı bir yatırım asistanıdır. Gerçek zamanlı piyasa verilerini yapay zekâ destekli analizlerle birleştirir; strateji simülasyonları yapmanıza, otomatik raporlar üretmenize ve sanal portföylerinizi yönetmenize olanak tanır.
+
+## Ekran Görüntüleri
+
+| | |
+|---|---|
+| <img src="docs/screenshots/dashboard.png" width="400" alt="Dashboard — ana pano"> | <img src="docs/screenshots/report.png" width="400" alt="Yapay zekâ rapor görünümü"> |
+
+**Solda:** Dashboard — ana pano (widget'lar, canlı fiyatlar, piyasa durumu)
+**Sağda:** Yapay zekâ rapor görünümü (temel analiz raporu)
 
 ## Özellikler
 
-- **📊 Pazar Panosu** — Hisse senetleri, döviz kurları, kıymetli metaller ve makroekonomik göstergeler anlık olarak
-- **🤖 Yapay Zekâ Danışmanı** — Portföyünüze ve risk profilinize göre akıllı öneriler
-- **📈 Etkileşimli Grafikler** — Çoklu zaman dilimi ve aralık desteğiyle mum grafikleri
-- **📄 Otomatik Raporlar** — Temel analiz, haber duyarlılığı ve strateji değerlendirme raporları
-- **🎮 Pazar Simülasyonları** — Stratejilerinizi gelişmiş simülasyon modelleriyle test edin
-- **💰 Sanal Portföyler** — Portföy oluşturun, performansınızı XU100 ile karşılaştırın
-- **📋 Takip Listesi** — İzlediğiniz hisseleri gerçek zamanlı fiyatlarla tek ekranda
-- **📢 Duyurular** — Yönetici duyuruları ve anlık bildirimler
-- **🌐 Çok Dilli Arayüz** — Türkçe ve İngilizce destek
-- **🎨 Temalar** — El yapımı 6 farklı tema (Florence, Ocean, Emerald, Midnight, Sunset, Light)
+- **Pazar Panosu** — Hisse senetleri, döviz kurları, kıymetli metaller ve makroekonomik göstergeler anlık olarak
+- **Yapay Zekâ Danışmanı** — Portföyünüze ve risk profilinize göre akıllı öneriler
+- **Etkileşimli Grafikler** — Çoklu zaman dilimi ve aralık desteğiyle mum grafikleri
+- **Strateji Simülasyonları** — Farklı piyasa senaryolarında stratejilerinizi test edin
+- **Sanal Portföyler** — Komisyon muhasebesi ve XU100 kıyaslamasıyla deneme amaçlı yatırım
+- **Yapay Zekâ Raporları** — Temel analiz, haber duyarlılığı ve strateji değerlendirme raporları
+- **Veri Dışa Aktarma** — Google Takeout tarzı yıllık veri ihracatı
+- **İzleme Listesi ve Halka Arzlar** — Favori hisseler ve güncel halka arz takvimi
 
----
+## Platformlar
 
-Bu depo, Florence'ın web arayüzünü içerir. API sunucusu için [project-florence/backend](https://github.com/project-florence/backend) deposuna, platformun tamamı için [project-florence organizasyon sayfasına](https://github.com/project-florence) göz atın.
+Florence'ı tarayıcıdan kullanabilir; [masaüstü](https://github.com/project-florence/desktop) ve [mobil](https://github.com/project-florence/mobile) uygulamalarından da erişebilirsiniz.
 
-İngilizce sürüm: [English](docs/README.en.md)
+## Repolar
+
+- [backend](https://github.com/project-florence/backend) — API sunucusu
+- [desktop](https://github.com/project-florence/desktop) — Masaüstü uygulaması
+- [mobile](https://github.com/project-florence/mobile) — Mobil uygulama
+- [api-spec](https://github.com/project-florence/api-spec) — API spesifikasyonu ve referansları
+- [florence-sdk](https://github.com/project-florence/florence-sdk) — Python SDK, CLI ve MCP sunucusu
 
 ## Lisans
 
-AGPL-3.0
+[AGPL-3.0](./LICENSE)

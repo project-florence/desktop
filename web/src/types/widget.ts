@@ -37,6 +37,7 @@ export const WIDGET_TYPES = {
   CURRENCY_PAIR: 'currency_pair',
   METAL_PRICE: 'metal_price',
   MARKET_STATUS: 'market_status',
+  DIGEST: 'digest',
 } as const
 
 export const PALETTE_ITEMS: PaletteItem[] = [
@@ -51,16 +52,18 @@ export const PALETTE_ITEMS: PaletteItem[] = [
   { type: WIDGET_TYPES.CURRENCY_PAIR, labelKey: 'customization.widgetCurrency', icon: 'dollar-sign', defaultW: 3, defaultH: 2, defaultConfig: { code: 'USD' } },
   { type: WIDGET_TYPES.METAL_PRICE, labelKey: 'customization.widgetMetal', icon: 'gem', defaultW: 3, defaultH: 2, defaultConfig: { metal: 'gram-altin' } },
   { type: WIDGET_TYPES.MARKET_STATUS, labelKey: 'customization.widgetMarketStatus', icon: 'activity', defaultW: 6, defaultH: 3 },
+  { type: WIDGET_TYPES.DIGEST, labelKey: 'customization.widgetDigest', icon: 'newspaper', defaultW: 12, defaultH: 8 },
 ]
 
 export const DEFAULT_LAYOUT: DashboardLayout = {
   layout: [
     { id: 'welcome', type: WIDGET_TYPES.WELCOME_HERO, x: 0, y: 0, w: 12, h: 4 },
-    { id: 'favorites', type: WIDGET_TYPES.FAVORITES_BAR, x: 0, y: 4, w: 12, h: 3 },
-    { id: 'gold', type: WIDGET_TYPES.STAT_CARD, x: 0, y: 7, w: 4, h: 2, config: { titleKey: 'dashboard.gold', dataSource: 'gold' } },
-    { id: 'usd', type: WIDGET_TYPES.STAT_CARD, x: 4, y: 7, w: 4, h: 2, config: { titleKey: 'dashboard.usd', dataSource: 'currency', pair: 'USD' } },
-    { id: 'eur', type: WIDGET_TYPES.STAT_CARD, x: 8, y: 7, w: 4, h: 2, config: { titleKey: 'dashboard.eur', dataSource: 'currency', pair: 'EUR' } },
-    { id: 'macro', type: WIDGET_TYPES.MACROECONOMY, x: 0, y: 9, w: 12, h: 3 },
-    { id: 'market', type: WIDGET_TYPES.MARKET_STATUS, x: 0, y: 12, w: 6, h: 3 },
+    { id: 'digest', type: WIDGET_TYPES.DIGEST, x: 0, y: 4, w: 12, h: 8 },
+    { id: 'favorites', type: WIDGET_TYPES.FAVORITES_BAR, x: 0, y: 12, w: 12, h: 3 },
+    { id: 'gold', type: WIDGET_TYPES.STAT_CARD, x: 0, y: 15, w: 4, h: 2, config: { titleKey: 'dashboard.gold', dataSource: 'gold' } },
+    { id: 'usd', type: WIDGET_TYPES.STAT_CARD, x: 4, y: 15, w: 4, h: 2, config: { titleKey: 'dashboard.usd', dataSource: 'currency', pair: 'USD' } },
+    { id: 'eur', type: WIDGET_TYPES.STAT_CARD, x: 8, y: 15, w: 4, h: 2, config: { titleKey: 'dashboard.eur', dataSource: 'currency', pair: 'EUR' } },
+    { id: 'macro', type: WIDGET_TYPES.MACROECONOMY, x: 0, y: 17, w: 12, h: 3 },
+    { id: 'market', type: WIDGET_TYPES.MARKET_STATUS, x: 0, y: 20, w: 6, h: 3 },
   ],
 }

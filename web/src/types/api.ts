@@ -550,6 +550,25 @@ export interface UpdateUsernamePayload {
   current_password: string
 }
 
+export type DigestSlot = 'morning' | 'noon' | 'evening'
+
+export interface DigestSection {
+  heading: string
+  body: string
+}
+
+export interface Digest {
+  id: string
+  date: string
+  slot: DigestSlot
+  title: string
+  content: string
+  sections: DigestSection[]
+  metadata: Record<string, unknown>
+  language: string
+  created_at: string
+}
+
 export type ExportStatus = 'queued' | 'processing' | 'ready' | 'sent' | 'failed'
 
 export interface ExportRecord {

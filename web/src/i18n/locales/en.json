@@ -394,6 +394,7 @@
     "widgetCurrency": "Currency Pair",
     "widgetMetal": "Metal Price",
     "widgetMarketStatus": "Market Status",
+    "widgetDigest": "Market Digest",
     "unsavedConfirm": "You have unsaved changes. Leave anyway?"
   },
   "onboarding": {
@@ -684,5 +685,14 @@
     "nextOpen": "Next Open",
     "timezone": "Timezone",
     "asOf": "As of"
+  },
+  "digest": {
+    "title": "Today's Market Digest",
+    "slotMorning": "Morning",
+    "slotNoon": "Noon",
+    "slotEvening": "Evening",
+    "noContent": "No market digest published yet",
+    "noContentHint": "The next digest will appear here when ready",
+    "error": "Could not load the market digest"
   }
 }
