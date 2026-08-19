@@ -394,6 +394,7 @@
     "widgetCurrency": "Döviz Kuru",
     "widgetMetal": "Metal Fiyatı",
     "widgetMarketStatus": "Borsa Durumu",
+    "widgetDigest": "Piyasa Özeti",
     "unsavedConfirm": "Kaydedilmemiş değişiklikler var. Yine de çıkmak istiyor musunuz?"
   },
   "onboarding": {
@@ -684,5 +685,14 @@
     "nextOpen": "Sonraki Açılış",
     "timezone": "Saat Dilimi",
     "asOf": "Güncelleme"
+  },
+  "digest": {
+    "title": "Günün Piyasa Özeti",
+    "slotMorning": "Sabah",
+    "slotNoon": "Öğle",
+    "slotEvening": "Akşam",
+    "noContent": "Henüz piyasa özeti yayınlanmadı",
+    "noContentHint": "Sonraki özet hazırlandığında burada görünecek",
+    "error": "Piyasa özeti yüklenemedi"
   }
 }
